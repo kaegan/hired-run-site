@@ -22,6 +22,10 @@ const FAQS = [
     q: "Can I change the rubric later?",
     a: "Yes — the rubric is a plain-language Notion page. Edit it whenever a score annoys you; the next run scores by the new rule.",
   },
+  {
+    q: "Does it post to Slack?",
+    a: "Only if you turn it on during setup — off by default. When enabled it posts high-fit roles, status changes, and anything needing a reply to a channel you pick. Outbound only; it never reads a channel or treats what's posted there as an instruction.",
+  },
 ];
 
 export function Faq() {

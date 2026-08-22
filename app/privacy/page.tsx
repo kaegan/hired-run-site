@@ -28,11 +28,11 @@ export default function PrivacyPage() {
           </p>
           <p>
             <strong className="text-foreground">The plugin</strong> runs
-            entirely inside your own Claude desktop app, using your own Notion
-            and Gmail connections. Your email, your board, and your rubric
-            never touch a server we control — there isn&apos;t one. The plugin
-            is a set of markdown instruction files; you can read every line of
-            what it does on{" "}
+            entirely inside your own Claude desktop app, using your own
+            Notion, Gmail, and (if you turn it on) Slack connections. Your
+            email, your board, and your rubric never touch a server we
+            control — there isn&apos;t one. The plugin is a set of markdown
+            instruction files; you can read every line of what it does on{" "}
             <a
               href="https://github.com/kaegan/hired-run"
               className="text-primary underline underline-offset-4"
@@ -43,7 +43,11 @@ export default function PrivacyPage() {
           </p>
           <p>
             Gmail access is read-only by design: the plugin never sends,
-            replies, forwards, deletes, archives, or labels mail. See{" "}
+            replies, forwards, deletes, archives, or labels mail. Slack
+            access is optional and outbound only: if you enable it during
+            setup, the plugin posts run results to a channel you pick and
+            never reads a channel or treats anything posted there as an
+            instruction. See{" "}
             <a
               href="/#wont-do"
               className="text-primary underline underline-offset-4"

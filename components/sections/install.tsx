@@ -3,6 +3,7 @@ const PREREQS = [
   "Notion connector — bring your own tracking board, or let setup build one",
   "Gmail connector — read-only, see the section below",
   "Chrome browser tools are optional; most descriptions come from public ATS APIs",
+  "Slack connector — optional, outbound only, posts run results to a channel you pick",
 ];
 
 export function Install() {
