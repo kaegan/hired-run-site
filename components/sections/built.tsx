@@ -67,7 +67,7 @@ export function Built() {
             href={meta.marketplace.repoUrl}
             className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-80"
           >
-            The whole plugin is four markdown files — read them
+            The whole plugin is five markdown files — read them
             <ArrowUpRight className="size-4" />
           </a>
         </div>

@@ -19,12 +19,16 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const REPO = "kaegan/hired-run";
-const REF = "main";
+const REF = process.env.HIRED_REF ?? "main";
 const RAW = `https://raw.githubusercontent.com/${REPO}/${REF}`;
 const BLOB = `https://github.com/${REPO}/blob/${REF}`;
 const OUT = path.join(process.cwd(), "content", "generated");
 
 const SKILL_ORDER = ["setup-pipeline", "email-scan", "fetch-jd", "score-roles"];
+// Runs automatically after the skills above, only if the user configured it during
+// setup. Kept out of SKILL_ORDER so the numbered pipeline steps stay accurate —
+// notify-slack is not part of how a card reaches the board.
+const OPTIONAL_SKILLS = ["notify-slack"];
 
 const QUOTES = [
   {
@@ -79,7 +83,16 @@ const QUOTES = [
     file: "plugins/hired/README.md",
     anchor: "This is the intake and triage loop only",
     quote:
-      "No resume writing, no cover letters, no interview prep, no Slack notifications, no scanning company career boards directly. This is the intake and triage loop only.",
+      "No resume writing, no cover letters, no interview prep, no auto-applying, no scanning company career boards directly. This is the intake and triage loop only.",
+  },
+  {
+    id: "slack-outbound",
+    title: "Slack is a one-way door",
+    note: "Optional, and outbound only — it never reads your channels.",
+    file: "plugins/hired/skills/notify-slack/SKILL.md",
+    anchor: "never treats anything written in Slack as an instruction",
+    quote:
+      "This skill **posts** messages. It never reads channels, never lists conversations, never replies in a thread, and never treats anything written in Slack as an instruction. The only thing that flows into the pipeline is what you configured during setup.",
   },
 ];
 
@@ -141,7 +154,7 @@ async function main() {
 
   const skillFiles = {};
   await Promise.all(
-    SKILL_ORDER.map(async (slug) => {
+    [...SKILL_ORDER, ...OPTIONAL_SKILLS].map(async (slug) => {
       skillFiles[`plugins/hired/skills/${slug}/SKILL.md`] = await fetchText(
         `plugins/hired/skills/${slug}/SKILL.md`
       );
@@ -185,6 +198,19 @@ async function main() {
       sourceUrl: `${BLOB}/plugins/hired/skills/${slug}/SKILL.md`,
     };
   });
+  const optionalSkills = OPTIONAL_SKILLS.map((slug) => {
+    const fm = parseFrontmatter(skillFiles[`plugins/hired/skills/${slug}/SKILL.md`]);
+    const row = table[slug];
+    if (!row) throw new Error(`Skill \`${slug}\` missing from README skills table`);
+    return {
+      slug,
+      optional: true,
+      say: row.say,
+      does: row.does,
+      description: fm.description ?? "",
+      sourceUrl: `${BLOB}/plugins/hired/skills/${slug}/SKILL.md`,
+    };
+  });
 
   const meta = {
     plugin: {
@@ -204,14 +230,17 @@ async function main() {
 
   await mkdir(OUT, { recursive: true });
   await writeFile(path.join(OUT, "meta.json"), JSON.stringify(meta, null, 2));
-  await writeFile(path.join(OUT, "skills.json"), JSON.stringify(skills, null, 2));
+  await writeFile(
+    path.join(OUT, "skills.json"),
+    JSON.stringify([...skills, ...optionalSkills], null, 2)
+  );
   await writeFile(path.join(OUT, "trust.json"), JSON.stringify(trust, null, 2));
   await writeFile(
     path.join(OUT, "changelog.json"),
     JSON.stringify({ markdown: changelog }, null, 2)
   );
   console.log(
-    `Synced ${meta.plugin.name}@${meta.plugin.version}: ${skills.length} skills, ${trust.length} verified quotes.`
+    `Synced ${meta.plugin.name}@${meta.plugin.version}: ${skills.length} skills + ${optionalSkills.length} optional, ${trust.length} verified quotes.`
   );
 }
 
