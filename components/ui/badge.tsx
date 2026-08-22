@@ -11,6 +11,8 @@ const badgeVariants = cva(
         default: "bg-primary text-primary-foreground",
         secondary: "bg-secondary text-secondary-foreground",
         outline: "border border-border text-muted-foreground bg-card",
+        accent: "bg-accent text-accent-foreground",
+        muted: "bg-muted text-muted-foreground",
       },
       size: {
         default: "px-2.5 py-1 text-[11px]",
