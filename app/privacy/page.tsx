@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className="flex-1">
-      <div className="mx-auto w-full max-w-3xl px-6 pb-16 pt-12">
+      <div className="mx-auto w-full max-w-6xl px-6 pb-16 pt-12">
         <a
           href="/"
           className="font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
         </a>
         <h1 className="mt-10 text-3xl font-semibold tracking-tight">Privacy</h1>
 
-        <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted-foreground">
+        <div className="mt-6 max-w-[62ch] space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
             <strong className="text-foreground">This site</strong> collects
             nothing beyond anonymous, cookie-less page analytics (Vercel

@@ -3,9 +3,14 @@
  *
  * Real companies, invented roles — never treat this as a real pipeline
  * snapshot. Companies are chosen for broad, global name recognition
- * rather than any particular person's actual job search. Every role
- * carries both a fit tier and a status so the same card set can
- * regroup under either view without re-fetching anything.
+ * rather than any particular person's actual job search.
+ *
+ * Every role carries a fit tier and a status so the same card set can
+ * regroup under either view. A handful also carry a "before" value —
+ * `arrivedOvernight`, `statusBefore`, `fitBefore` — which is what the
+ * board's Last night / This morning toggle diffs against. That toggle
+ * is the whole point: it's the only thing on the page that shows what
+ * a scheduled run actually does, rather than describing it.
  *
  * Kept out of content/generated/ on purpose: that directory is synced
  * from the plugin repo on every prebuild and this data is hand-authored.
@@ -16,7 +21,9 @@ export type RoleStatus =
   | "next-up"
   | "tailoring"
   | "submitted"
-  | "interviewing";
+  | "interviewing"
+  | "offer"
+  | "no-response";
 
 export type BoardRole = {
   id: string;
@@ -27,8 +34,13 @@ export type BoardRole = {
   path: string;
   age: string;
   fit: FitTier;
+  /** Fit before this morning's run — set only when scoring just landed. */
+  fitBefore?: FitTier;
   status: RoleStatus;
-  isNew?: boolean;
+  /** Status before this morning's run — set only when it just advanced. */
+  statusBefore?: RoleStatus;
+  /** Card did not exist on last night's board at all. */
+  arrivedOvernight?: boolean;
 };
 
 export const ROLES: BoardRole[] = [
@@ -42,7 +54,7 @@ export const ROLES: BoardRole[] = [
     age: "Today",
     fit: "high",
     status: "next-up",
-    isNew: true,
+    arrivedOvernight: true,
   },
   {
     id: "netflix-recs-pm",
@@ -64,7 +76,8 @@ export const ROLES: BoardRole[] = [
     path: "/positions/7714523",
     age: "Yesterday",
     fit: "high",
-    status: "tailoring",
+    status: "interviewing",
+    statusBefore: "tailoring",
   },
   {
     id: "shopify-merchant-pm",
@@ -108,6 +121,7 @@ export const ROLES: BoardRole[] = [
     path: "/figma/jobs/4930221",
     age: "3d",
     fit: "medium",
+    fitBefore: "unscored",
     status: "tailoring",
   },
   {
@@ -120,6 +134,18 @@ export const ROLES: BoardRole[] = [
     age: "3d",
     fit: "medium",
     status: "next-up",
+  },
+  {
+    id: "robinhood-growth-pm",
+    title: "Product Manager, Growth",
+    company: "Robinhood",
+    mark: "RH",
+    host: "job-boards.greenhouse.io",
+    path: "/robinhood/jobs/6204417",
+    age: "Today",
+    fit: "low",
+    status: "next-up",
+    arrivedOvernight: true,
   },
   {
     id: "stripe-payments-pm",
@@ -155,6 +181,17 @@ export const ROLES: BoardRole[] = [
     status: "next-up",
   },
   {
+    id: "asana-collab-pm",
+    title: "Product Manager, Collaboration Platform",
+    company: "Asana",
+    mark: "AS",
+    host: "jobs.lever.co",
+    path: "/asana/9b21f6c4-1a08",
+    age: "Last week",
+    fit: "low",
+    status: "tailoring",
+  },
+  {
     id: "dropbox-sync-pm",
     title: "Product Manager, File Sync",
     company: "Dropbox",
@@ -163,6 +200,50 @@ export const ROLES: BoardRole[] = [
     path: "/jobs/4012209",
     age: "Last week",
     fit: "unscored",
-    status: "next-up",
+    status: "no-response",
+  },
+  {
+    id: "squarespace-commerce-pm",
+    title: "Product Manager, Commerce",
+    company: "Squarespace",
+    mark: "SQ",
+    host: "job-boards.greenhouse.io",
+    path: "/squarespace/jobs/5541209",
+    age: "Last week",
+    fit: "low",
+    status: "submitted",
+  },
+  {
+    id: "zillow-search-pm",
+    title: "Senior Product Manager, Search Experience",
+    company: "Zillow",
+    mark: "ZL",
+    host: "zillow.com",
+    path: "/careers/jobs/29841",
+    age: "2 weeks",
+    fit: "low",
+    status: "no-response",
+  },
+  {
+    id: "instacart-marketplace-pm",
+    title: "Product Manager, Marketplace",
+    company: "Instacart",
+    mark: "IC",
+    host: "instacart.careers",
+    path: "/jobs/70213",
+    age: "3 weeks",
+    fit: "low",
+    status: "offer",
+  },
+  {
+    id: "reddit-community-pm",
+    title: "Product Manager, Community Tools",
+    company: "Reddit",
+    mark: "RD",
+    host: "job-boards.greenhouse.io",
+    path: "/reddit/jobs/6091823",
+    age: "3 weeks",
+    fit: "unscored",
+    status: "no-response",
   },
 ];

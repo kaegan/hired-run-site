@@ -4,52 +4,149 @@ import type { VariantProps } from "class-variance-authority";
 
 type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
 
-const FIT_COLUMNS: { key: FitTier; label: string; variant: BadgeVariant }[] = [
-  { key: "high", label: "High", variant: "accent" },
-  { key: "medium", label: "Medium", variant: "secondary" },
-  { key: "low", label: "Low", variant: "muted" },
-  { key: "unscored", label: "No score", variant: "outline" },
-];
-
-const STATUS_COLUMNS: {
-  key: RoleStatus;
-  label: string;
-  variant: BadgeVariant;
-}[] = [
-  { key: "next-up", label: "Next Up", variant: "muted" },
-  { key: "tailoring", label: "Tailoring", variant: "secondary" },
-  { key: "submitted", label: "Submitted", variant: "accent" },
-  { key: "interviewing", label: "Interviewing", variant: "default" },
-];
-
-const FIT_BADGE: Record<FitTier, { label: string; variant: BadgeVariant }> = {
-  high: { label: "High", variant: "accent" },
-  medium: { label: "Medium", variant: "secondary" },
-  low: { label: "Low", variant: "muted" },
-  unscored: { label: "No score", variant: "outline" },
+const FIT_LABEL: Record<FitTier, string> = {
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+  unscored: "Unscored",
 };
 
-function RoleCard({ role }: { role: BoardRole }) {
-  const fit = FIT_BADGE[role.fit];
+const FIT_VARIANT: Record<FitTier, BadgeVariant> = {
+  high: "solid",
+  medium: "surface",
+  low: "outline",
+  unscored: "dashed",
+};
+
+const FIT_ORDER: FitTier[] = ["high", "medium", "low", "unscored"];
+
+const STATUS_LABEL: Record<RoleStatus, string> = {
+  "next-up": "Next Up",
+  tailoring: "Tailoring",
+  submitted: "Submitted",
+  interviewing: "Interviewing",
+  offer: "Offer",
+  "no-response": "No Response",
+};
+
+const STATUS_VARIANT: Record<RoleStatus, BadgeVariant> = {
+  "next-up": "outline",
+  tailoring: "outline",
+  submitted: "surface",
+  interviewing: "line",
+  offer: "solid",
+  "no-response": "dashed",
+};
+
+const STATUS_ORDER: RoleStatus[] = [
+  "next-up",
+  "tailoring",
+  "submitted",
+  "interviewing",
+  "offer",
+  "no-response",
+];
+
+const VISIBLE_CAP = 4;
+
+/**
+ * Every column groups its roles into four buckets:
+ *  - static:    unaffected by the run — visible in both states
+ *  - arrivals:  didn't exist last night — visible only "this morning"
+ *  - entering:  belonged to a different column last night — visible
+ *               only "this morning", highlighted, in this column
+ *  - leaving:   belongs to a different column this morning — visible
+ *               only "last night", plain, in this column
+ * "Last night" is intentionally the neutral state: nothing in it is
+ * highlighted. Flipping to "this morning" is the only thing on the page
+ * that shows what the scheduled run did, rather than describing it.
+ */
+type ColumnGroups = {
+  static: BoardRole[];
+  arrivals: BoardRole[];
+  entering: BoardRole[];
+  leaving: BoardRole[];
+};
+
+function partitionByFit(tier: FitTier): ColumnGroups {
+  return {
+    static: ROLES.filter(
+      (r) => !r.arrivedOvernight && r.fitBefore === undefined && r.fit === tier
+    ),
+    arrivals: ROLES.filter((r) => r.arrivedOvernight && r.fit === tier),
+    entering: ROLES.filter(
+      (r) => r.fitBefore !== undefined && r.fitBefore !== tier && r.fit === tier
+    ),
+    leaving: ROLES.filter((r) => r.fitBefore === tier && r.fit !== tier),
+  };
+}
+
+function partitionByStatus(status: RoleStatus): ColumnGroups {
+  return {
+    static: ROLES.filter(
+      (r) =>
+        !r.arrivedOvernight && r.statusBefore === undefined && r.status === status
+    ),
+    arrivals: ROLES.filter((r) => r.arrivedOvernight && r.status === status),
+    entering: ROLES.filter(
+      (r) =>
+        r.statusBefore !== undefined &&
+        r.statusBefore !== status &&
+        r.status === status
+    ),
+    leaving: ROLES.filter((r) => r.statusBefore === status && r.status !== status),
+  };
+}
+
+function deltaLabelFor(role: BoardRole, dimension: "fit" | "status") {
+  if (role.arrivedOvernight) return "new";
+  if (dimension === "fit" && role.fitBefore !== undefined) {
+    return `scored ${FIT_LABEL[role.fit]}`;
+  }
+  if (dimension === "status" && role.statusBefore !== undefined) {
+    return `→ ${STATUS_LABEL[role.status]}`;
+  }
+  return "changed";
+}
+
+function RoleCard({
+  role,
+  highlighted = false,
+  deltaLabel,
+  visibilityClassName = "",
+  displayFit,
+}: {
+  role: BoardRole;
+  highlighted?: boolean;
+  deltaLabel?: string;
+  visibilityClassName?: string;
+  /** Overrides the fit chip — used by a "leaving" card to show the tier
+   * it belonged to last night rather than where it ended up. */
+  displayFit?: FitTier;
+}) {
+  const fit = displayFit ?? role.fit;
+
   return (
-    <li>
+    <li className={visibilityClassName}>
       <div
-        className={`relative flex flex-col gap-2 rounded-md border p-3 transition motion-reduce:transition-none skill-scan:border-primary/30 ${
-          role.isNew
-            ? "border-primary/40 bg-primary/5 skill-scan:border-primary/70 skill-scan:bg-primary/10"
-            : "border-border bg-background/40"
+        className={`relative flex flex-col gap-2 rounded-md border p-3 transition-colors motion-reduce:transition-none ${
+          highlighted
+            ? "border-primary-line-strong bg-primary-surface skill-scan:border-primary-line-strong"
+            : "border-border bg-card-inset skill-scan:border-primary-line"
         }`}
       >
-        {role.isNew && (
+        {highlighted && deltaLabel && (
           <span
             aria-hidden
-            className="absolute right-2 top-2 size-1.5 rounded-full bg-primary/50 skill-scan:bg-primary"
-          />
+            className="absolute right-2 top-2 font-mono text-micro font-semibold text-primary-surface-foreground"
+          >
+            {deltaLabel}
+          </span>
         )}
         <div className="flex items-center gap-1.5">
           <span
             aria-hidden
-            className="flex size-4 shrink-0 items-center justify-center rounded-[3px] bg-secondary font-mono text-[8px] font-semibold text-muted-foreground"
+            className="flex size-4 shrink-0 items-center justify-center rounded-[3px] bg-secondary font-mono text-[9px] font-semibold text-muted-foreground"
           >
             {role.mark}
           </span>
@@ -64,7 +161,7 @@ function RoleCard({ role }: { role: BoardRole }) {
 
         <p
           aria-hidden
-          className="truncate font-mono text-[11px] text-muted-foreground skill-jd:text-primary skill-jd:underline skill-jd:decoration-primary/40 skill-jd:underline-offset-2"
+          className="truncate font-mono text-micro text-muted-foreground skill-jd:text-primary skill-jd:underline skill-jd:decoration-primary-line skill-jd:underline-offset-2"
         >
           {role.host}
           <span className="text-muted-foreground/60">{role.path}</span>
@@ -72,13 +169,13 @@ function RoleCard({ role }: { role: BoardRole }) {
 
         <div className="flex items-center justify-between gap-2 pt-0.5">
           <Badge
-            variant={fit.variant}
+            variant={FIT_VARIANT[fit]}
             size="sm"
-            className="shrink-0 skill-score:ring-1 skill-score:ring-primary/60 skill-score:ring-offset-1 skill-score:ring-offset-card"
+            className="shrink-0 skill-score:ring-1 skill-score:ring-primary-line-strong skill-score:ring-offset-1 skill-score:ring-offset-card"
           >
-            {fit.label}
+            {FIT_LABEL[fit]}
           </Badge>
-          <span className="font-mono text-[10px] text-muted-foreground">
+          <span className="font-mono text-micro text-muted-foreground">
             {role.age}
           </span>
         </div>
@@ -87,55 +184,135 @@ function RoleCard({ role }: { role: BoardRole }) {
   );
 }
 
+function OverflowRow({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <li
+      aria-hidden
+      className="px-1 py-1 font-mono text-micro text-muted-foreground/70"
+    >
+      +{count} more
+    </li>
+  );
+}
+
 function BoardColumn({
   label,
   variant,
-  roles,
+  groups,
+  dimension,
 }: {
   label: string;
   variant: BadgeVariant;
-  roles: BoardRole[];
+  groups: ColumnGroups;
+  dimension: "fit" | "status";
 }) {
+  const { static: staticRoles, arrivals, entering, leaving } = groups;
+  const hasTransitions = arrivals.length + entering.length + leaving.length > 0;
+
+  // Columns touched by the overnight run render every card that ever
+  // belongs to them rather than truncating — the point is to see the
+  // change, not to hide it behind a "+N more" row.
+  const visibleStatic = hasTransitions
+    ? staticRoles
+    : staticRoles.slice(0, VISIBLE_CAP);
+  const overflow = hasTransitions ? 0 : staticRoles.length - visibleStatic.length;
+
+  const beforeCount = staticRoles.length + leaving.length;
+  const afterCount = staticRoles.length + entering.length + arrivals.length;
+
   return (
-    <div className="w-48 shrink-0">
-      <div className="mb-2 flex items-center gap-2 px-0.5 skill-setup:[&>*]:ring-1 skill-setup:[&>*]:ring-primary/50 skill-setup:[&>*]:ring-offset-2 skill-setup:[&>*]:ring-offset-card">
+    <div className="w-64 shrink-0">
+      <div className="mb-2 flex items-center gap-2 px-0.5 skill-setup:[&>*]:ring-1 skill-setup:[&>*]:ring-primary-line-strong skill-setup:[&>*]:ring-offset-2 skill-setup:[&>*]:ring-offset-card">
         <Badge variant={variant} size="sm">
           {label}
         </Badge>
-        <span className="font-mono text-[10px] text-muted-foreground">
-          {roles.length}
+        <span className="font-mono text-micro text-muted-foreground">
+          <span className="run-after:hidden">{beforeCount}</span>
+          <span className="hidden run-after:inline">{afterCount}</span>
         </span>
       </div>
-      <ul aria-label={`${label} — ${roles.length} roles`} className="space-y-2">
-        {roles.map((role) => (
+      <ul aria-label={`${label} roles`} className="space-y-2">
+        {arrivals.map((role) => (
+          <RoleCard
+            key={role.id}
+            role={role}
+            highlighted
+            deltaLabel={deltaLabelFor(role, dimension)}
+            visibilityClassName="hidden run-after:block"
+          />
+        ))}
+        {entering.map((role) => (
+          <RoleCard
+            key={role.id}
+            role={role}
+            highlighted
+            deltaLabel={deltaLabelFor(role, dimension)}
+            visibilityClassName="hidden run-after:block"
+          />
+        ))}
+        {visibleStatic.map((role) => (
           <RoleCard key={role.id} role={role} />
         ))}
+        {leaving.map((role) => (
+          <RoleCard
+            key={role.id}
+            role={role}
+            visibilityClassName="run-after:hidden"
+            displayFit={dimension === "fit" ? role.fitBefore : undefined}
+          />
+        ))}
+        <OverflowRow count={overflow} />
       </ul>
     </div>
   );
 }
 
 export function PipelineBoard() {
-  const byFit = (fit: FitTier) => ROLES.filter((r) => r.fit === fit);
-  const byStatus = (status: RoleStatus) =>
-    ROLES.filter((r) => r.status === status);
-
   return (
     <figure className="mt-10">
-      <div className="overflow-hidden rounded-lg border border-border bg-card transition motion-reduce:transition-none skill-any:border-primary/40 has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
-        <div className="flex items-center justify-between border-b border-border px-4 py-2">
+      <div className="overflow-hidden rounded-lg border border-border bg-card transition-colors motion-reduce:transition-none skill-any:border-primary-line-strong has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border px-4 py-2">
           <span className="font-mono text-xs text-muted-foreground">
             <span className="text-primary" aria-hidden>
               ▸
             </span>{" "}
             Job Pipeline
           </span>
-          <span className="font-mono text-xs text-muted-foreground">
-            {ROLES.length} roles
-          </span>
+
+          <fieldset className="flex items-center gap-1 rounded-md border border-border p-0.5">
+            <legend className="sr-only">Compare the board to last night</legend>
+            <input
+              type="radio"
+              name="board-run"
+              id="board-run-before"
+              data-board-run="before"
+              defaultChecked
+              className="peer/before sr-only"
+            />
+            <label
+              htmlFor="board-run-before"
+              className="cursor-pointer rounded-[5px] px-2 py-1 font-mono text-micro text-muted-foreground transition-colors motion-reduce:transition-none peer-checked/before:bg-muted peer-checked/before:text-foreground peer-focus-visible/before:ring-2 peer-focus-visible/before:ring-ring"
+            >
+              Last night
+            </label>
+            <input
+              type="radio"
+              name="board-run"
+              id="board-run-after"
+              data-board-run="after"
+              className="peer/after sr-only"
+            />
+            <label
+              htmlFor="board-run-after"
+              className="cursor-pointer rounded-[5px] px-2 py-1 font-mono text-micro text-muted-foreground transition-colors motion-reduce:transition-none peer-checked/after:bg-muted peer-checked/after:text-foreground peer-focus-visible/after:ring-2 peer-focus-visible/after:ring-ring"
+            >
+              This morning
+            </label>
+          </fieldset>
         </div>
 
-        <div className="border-b border-border px-4">
+        <div className="flex items-center justify-between border-b border-border px-4">
           <fieldset className="flex gap-4">
             <legend className="sr-only">Group roles by</legend>
             <div className="flex items-center">
@@ -170,6 +347,9 @@ export function PipelineBoard() {
               </label>
             </div>
           </fieldset>
+          <span className="hidden font-mono text-micro text-muted-foreground sm:inline">
+            06:00 scheduled run
+          </span>
         </div>
 
         <div className="min-w-0 mask-r-from-92% mask-r-to-100%">
@@ -181,22 +361,24 @@ export function PipelineBoard() {
             className="overflow-x-auto overscroll-x-contain focus-visible:outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]"
           >
             <div className="flex w-max gap-3 p-3 board-status:hidden">
-              {FIT_COLUMNS.map((col) => (
+              {FIT_ORDER.map((fit) => (
                 <BoardColumn
-                  key={col.key}
-                  label={col.label}
-                  variant={col.variant}
-                  roles={byFit(col.key)}
+                  key={fit}
+                  label={FIT_LABEL[fit]}
+                  variant={FIT_VARIANT[fit]}
+                  groups={partitionByFit(fit)}
+                  dimension="fit"
                 />
               ))}
             </div>
             <div className="hidden w-max gap-3 p-3 board-status:flex">
-              {STATUS_COLUMNS.map((col) => (
+              {STATUS_ORDER.map((status) => (
                 <BoardColumn
-                  key={col.key}
-                  label={col.label}
-                  variant={col.variant}
-                  roles={byStatus(col.key)}
+                  key={status}
+                  label={STATUS_LABEL[status]}
+                  variant={STATUS_VARIANT[status]}
+                  groups={partitionByStatus(status)}
+                  dimension="status"
                 />
               ))}
             </div>
@@ -204,7 +386,7 @@ export function PipelineBoard() {
         </div>
       </div>
 
-      <figcaption className="mt-3 font-mono text-xs text-muted-foreground">
+      <figcaption className="mt-3 font-mono text-micro text-muted-foreground">
         Illustration — real companies, invented roles.
       </figcaption>
     </figure>
