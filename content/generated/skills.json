@@ -30,5 +30,13 @@
     "does": "Scores against your rubric, writes tier plus summary to Notion",
     "description": "Score job postings against the user's own rubric and write the score and a short summary to their Notion board. Trigger when the user says \"score these roles\", \"score this job\", \"how's the fit\", \"rate this posting\", when a scheduled hired.run scoring run fires, or when new records need evaluating.",
     "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/score-roles/SKILL.md"
+  },
+  {
+    "slug": "notify-slack",
+    "optional": true,
+    "say": "(runs automatically after a scan or score, if configured)",
+    "does": "Posts high-fit roles, status changes, and items needing a reply to a Slack channel you chose",
+    "description": "Post a run's results to a Slack channel the user chose during setup: high-fit roles, application status changes, and items that need a reply. Trigger when email-scan or score-roles finish their own report and Slack is configured, or when the user says \"post that to Slack\". Optional. Does nothing if Slack was never configured.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/notify-slack/SKILL.md"
   }
 ]
