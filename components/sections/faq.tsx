@@ -22,6 +22,14 @@ const FAQS = [
     q: "Can I change the rubric later?",
     a: "Yes — the rubric is a plain-language Notion page. Edit it whenever a score annoys you; the next run scores by the new rule.",
   },
+  {
+    q: "Do I have to give it my resume?",
+    a: "No. Without one it scores off the proof points you give it during setup. With one, summaries get specific: which of your accomplishments maps to the posting, and what the posting wants that nothing in your background covers. Cover letters you actually sent help too — they show how you pitch yourself.",
+  },
+  {
+    q: "What happens to my resume?",
+    a: "It gets read. The extracted profile lands on a Notion page next to your rubric, in your own workspace, and that is the only place it goes — not to Slack, not to a job application, not to a server of ours. Nothing edits or rewrites the file, and the rubric still decides what matters: your resume says what is true about you, never what you want.",
+  },
 ];
 
 export function Faq() {

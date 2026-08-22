@@ -42,6 +42,16 @@ export default function PrivacyPage() {
             .
           </p>
           <p>
+            <strong className="text-foreground">
+              Your resume and cover letters
+            </strong>{" "}
+            are optional, and read-only. If you point the plugin at them, it
+            reads them and writes the extracted profile to a page in your own
+            Notion, beside your rubric. It never edits or rewrites the file,
+            never posts its contents to Slack, and never attaches it to an
+            application — this plugin does not apply to jobs at all.
+          </p>
+          <p>
             Gmail access is read-only by design: the plugin never sends,
             replies, forwards, deletes, archives, or labels mail. Slack
             access is optional and outbound only: if you enable it during

@@ -18,9 +18,17 @@
   {
     "id": "never-applies",
     "title": "It never applies for you",
-    "note": "No resumes, no cover letters, no auto-submitted applications. Triage only.",
-    "quote": "No resume writing, no cover letters, no interview prep, no auto-applying, no scanning company career boards directly. This is the intake and triage loop only.",
-    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/README.md#L109",
+    "note": "It reads your resume to score with. It never writes one, and never submits anything.",
+    "quote": "No resume or cover letter writing, no interview prep, no auto-applying, no scanning company career boards directly. It reads a resume you point it at, as evidence for scoring; it never writes one, never edits one, and never sends one anywhere.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/README.md#L135",
     "sourcePath": "README.md"
+  },
+  {
+    "id": "resume-read-only",
+    "title": "Your resume is read, never written",
+    "note": "Its contents go to your own Notion page and stop there — not to Slack, not to a form, not to us.",
+    "quote": "Your resume is read, never written. This skill never edits, rewrites, scores, or improves it, never attaches it to an application, and never sends it anywhere: the only place its contents are written is your own Notion page.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/load-experience/SKILL.md#L42",
+    "sourcePath": "skills/load-experience/SKILL.md"
   }
 ]

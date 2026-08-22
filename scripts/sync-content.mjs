@@ -25,10 +25,11 @@ const BLOB = `https://github.com/${REPO}/blob/${REF}`;
 const OUT = path.join(process.cwd(), "content", "generated");
 
 const SKILL_ORDER = ["setup-pipeline", "email-scan", "fetch-jd", "score-roles"];
-// Runs automatically after the skills above, only if the user configured it during
-// setup. Kept out of SKILL_ORDER so the numbered pipeline steps stay accurate —
-// notify-slack is not part of how a card reaches the board.
-const OPTIONAL_SKILLS = ["notify-slack"];
+// Optional skills, kept out of SKILL_ORDER so the numbered pipeline steps stay
+// accurate — neither is part of how a card reaches the board. load-experience runs
+// once during setup if the user has a resume to hand; notify-slack runs after a scan
+// or score if they configured a channel.
+const OPTIONAL_SKILLS = ["load-experience", "notify-slack"];
 
 const QUOTES = [
   {
@@ -52,11 +53,20 @@ const QUOTES = [
   {
     id: "never-applies",
     title: "It never applies for you",
-    note: "No resumes, no cover letters, no auto-submitted applications. Triage only.",
+    note: "It reads your resume to score with. It never writes one, and never submits anything.",
     file: "plugins/hired/README.md",
     anchor: "This is the intake and triage loop only",
     quote:
-      "No resume writing, no cover letters, no interview prep, no auto-applying, no scanning company career boards directly. This is the intake and triage loop only.",
+      "No resume or cover letter writing, no interview prep, no auto-applying, no scanning company career boards directly. It reads a resume you point it at, as evidence for scoring; it never writes one, never edits one, and never sends one anywhere.",
+  },
+  {
+    id: "resume-read-only",
+    title: "Your resume is read, never written",
+    note: "Its contents go to your own Notion page and stop there — not to Slack, not to a form, not to us.",
+    file: "plugins/hired/skills/load-experience/SKILL.md",
+    anchor: "read, never written",
+    quote:
+      "Your resume is **read, never written**. This skill never edits, rewrites, scores, or improves it, never attaches it to an application, and never sends it anywhere: the only place its contents are written is your own Notion page.",
   },
 ];
 
@@ -67,15 +77,25 @@ async function fetchText(p) {
   return res.text();
 }
 
-const normalize = (s) => s.replace(/\*\*/g, "").replace(/\s+/g, " ").trim();
+// Strips the markdown that wraps a promise without changing its words:
+// bold markers, and the "> " of a blockquote (several of the commitments are
+// written as lines the skill reads out to the user, which is a blockquote in
+// the source). Nothing here loosens the match — the words still have to agree.
+const normalize = (s) =>
+  s
+    .replace(/\*\*/g, "")
+    .replace(/^[ \t]*>[ \t]?/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 function lineOf(text, anchor) {
   // Anchors may wrap across lines in the ~90-char-wrapped source files, so
-  // match with any whitespace run between words.
+  // match with any whitespace run between words — and across the "> " that
+  // starts each line of a blockquote.
   const pattern = anchor
     .split(/\s+/)
     .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-    .join("\\s+");
+    .join("\\s+(?:>[ \\t]*)?");
   const m = text.match(new RegExp(pattern));
   if (!m) return null;
   return text.slice(0, m.index).split("\n").length;
