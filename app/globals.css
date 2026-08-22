@@ -126,12 +126,4 @@ body {
   color: var(--primary-foreground);
 }
 
-/* ── Pipeline board ────────────────────────────────────────────────
- * The board shows one state — today's — with what a scheduled run just
- * changed highlighted on the cards themselves. Its only interactive
- * control is the Fit Score / Status view switch, which is real Notion
- * behavior (grouping a database by a different property). That switch
- * is :has()-driven — the board ships zero JavaScript and keeps working
- * with CSS disabled (Fit Score view only). */
 
-@custom-variant board-status ([data-pipeline]:has([data-board-view="status"]:checked) &);

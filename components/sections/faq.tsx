@@ -22,10 +22,6 @@ const FAQS = [
     q: "Can I change the rubric later?",
     a: "Yes — the rubric is a plain-language Notion page. Edit it whenever a score annoys you; the next run scores by the new rule.",
   },
-  {
-    q: "Does it post to Slack?",
-    a: "Only if you turn it on during setup — off by default. When enabled it posts high-fit roles, status changes, and anything needing a reply to a channel you pick. Outbound only; it never reads a channel or treats what's posted there as an instruction.",
-  },
 ];
 
 export function Faq() {
@@ -36,7 +32,7 @@ export function Faq() {
           aria-hidden
           className="hidden font-mono text-micro text-muted-foreground/50 lg:block"
         >
-          05
+          04
         </span>
         <div>
           <h2 className="text-3xl font-semibold tracking-tight">
