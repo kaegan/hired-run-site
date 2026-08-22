@@ -103,9 +103,9 @@ export function HowItWorks() {
           One morning with hired
         </h2>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-          Setup interviews you once. After that, a scheduled run does the
-          reading and scoring — you mostly just wake up to a board that
-          moved.
+          Setup interviews you once, and reads your resume if you have one
+          handy. After that, a scheduled run does the reading and scoring —
+          you mostly just wake up to a board that moved.
         </p>
       </div>
 
@@ -115,14 +115,21 @@ export function HowItWorks() {
           when="You, once"
           title="It interviews you, then writes it down"
           body={
-            <p>
-              Setup is a conversation, not a form. What comes out of it is
-              an ordinary Notion page you can read and edit — your profile,
-              your weighted rubric, your hard filters. There is no settings
-              screen, because this is the settings screen.
-            </p>
+            <>
+              <p>
+                Setup is a conversation, not a form. What comes out of it is
+                an ordinary Notion page you can read and edit — your profile,
+                your weighted rubric, your hard filters. There is no settings
+                screen, because this is the settings screen.
+              </p>
+              <p className="mt-3">
+                Hand it your resume and it reads that too, so a score can cite
+                the job you actually did instead of guessing. Optional, and it
+                only ever reads: the rubric still decides what counts.
+              </p>
+            </>
           }
-          footer={<BlockFooter slugs={["setup-pipeline"]} />}
+          footer={<BlockFooter slugs={["setup-pipeline", "load-experience"]} />}
         >
           <NotionConfig />
         </Block>

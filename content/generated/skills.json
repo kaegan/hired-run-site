@@ -32,6 +32,14 @@
     "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/score-roles/SKILL.md"
   },
   {
+    "slug": "load-experience",
+    "optional": true,
+    "say": "\"use my resume\"",
+    "does": "Reads a resume and cover letters you point at, and writes the evidence scoring cites",
+    "description": "Read the user's resume and cover letters and turn them into an experience profile the scorer can cite as evidence. Trigger when the user says \"use my resume\", \"here is my resume\", \"add my cover letter\", \"load my experience\", \"update my resume\", or when setup reaches the profile step and the user has a resume to hand.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/load-experience/SKILL.md"
+  },
+  {
     "slug": "notify-slack",
     "optional": true,
     "say": "(runs automatically after a scan or score, if configured)",

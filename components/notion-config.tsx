@@ -1,4 +1,10 @@
-import { RUBRIC, PERSONA, HARD_FILTERS, RUN_TIME } from "@/components/how-it-works-data";
+import {
+  RUBRIC,
+  PERSONA,
+  HARD_FILTERS,
+  EXPERIENCE,
+  RUN_TIME,
+} from "@/components/how-it-works-data";
 
 /**
  * "How it works" block 1 — the config page setup writes to Notion.
@@ -81,6 +87,27 @@ export function NotionConfig() {
                 <PropertyRow label="Not looking for" value={PERSONA.notLookingFor} />
                 <PropertyRow label="Comp floor" value={PERSONA.compFloor} />
                 <PropertyRow label="Timing" value={PERSONA.noticePeriod} />
+              </div>
+
+              <SectionHeading>What I&apos;ve done</SectionHeading>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Read once from a resume, kept on its own page. Scoring cites
+                these; it never treats them as things I want.
+              </p>
+              <ul className="mt-3 space-y-1.5 text-sm text-foreground">
+                {EXPERIENCE.proofPoints.map((point) => (
+                  <li key={point} className="flex gap-2">
+                    <span aria-hidden className="text-muted-foreground/50">
+                      •
+                    </span>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3">
+                <PropertyRow label="Deep" value={EXPERIENCE.deep} />
+                <PropertyRow label="Adjacent, not deep" value={EXPERIENCE.thin} />
+                <PropertyRow label="Read from" value={EXPERIENCE.source} />
               </div>
 
               <SectionHeading>My rubric</SectionHeading>

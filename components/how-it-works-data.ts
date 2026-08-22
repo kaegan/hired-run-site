@@ -80,6 +80,24 @@ export const PERSONA = {
   noticePeriod: "Available in 4 weeks",
 };
 
+/**
+ * What the resume established, as the Experience page stores it. The
+ * scoring run in ClaudeRun cites the first of these by name, so the two
+ * illustrations agree about what this person has actually done.
+ *
+ * Invented, like the rest of the persona.
+ */
+export const EXPERIENCE = {
+  source: "Sam-Rivera-resume.pdf · 2 cover letters",
+  proofPoints: [
+    "Took Loop from nothing to 400k monthly actives in 18 months",
+    "Ran the ranking model rollout — 31% lift in session depth",
+    "Grew activation 25% by rebuilding onboarding end to end",
+  ],
+  deep: "Consumer marketplaces · recommendations · growth",
+  thin: "Fintech — one payments project, 2021",
+};
+
 export const HARD_FILTERS = [
   "No on-site 5 days",
   "No crypto",
