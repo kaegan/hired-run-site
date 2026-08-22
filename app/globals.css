@@ -127,67 +127,11 @@ body {
 }
 
 /* ── Pipeline board ────────────────────────────────────────────────
- * The board and the skill list below it share a [data-pipeline] scope
- * so each skill step can cross-highlight the part of the card it
- * produces, and the board's own "before / after" toggle reveals what a
- * scheduled run changed. All of this is :has()-driven — the board
- * ships zero JavaScript and keeps working with CSS disabled (fit view,
- * "before" state only). */
+ * The board shows one state — today's — with what a scheduled run just
+ * changed highlighted on the cards themselves. Its only interactive
+ * control is the Fit Score / Status view switch, which is real Notion
+ * behavior (grouping a database by a different property). That switch
+ * is :has()-driven — the board ships zero JavaScript and keeps working
+ * with CSS disabled (Fit Score view only). */
 
 @custom-variant board-status ([data-pipeline]:has([data-board-view="status"]:checked) &);
-@custom-variant run-after ([data-pipeline]:has([data-board-run="after"]:checked) &);
-
-@custom-variant skill-any {
-  @media (hover: hover) and (pointer: fine) {
-    [data-pipeline]:has([data-skill]:hover) & {
-      @slot;
-    }
-  }
-  [data-pipeline]:has([data-skill] a:focus-visible) & {
-    @slot;
-  }
-}
-
-@custom-variant skill-setup {
-  @media (hover: hover) and (pointer: fine) {
-    [data-pipeline]:has([data-skill="setup-pipeline"]:hover) & {
-      @slot;
-    }
-  }
-  [data-pipeline]:has([data-skill="setup-pipeline"] a:focus-visible) & {
-    @slot;
-  }
-}
-
-@custom-variant skill-scan {
-  @media (hover: hover) and (pointer: fine) {
-    [data-pipeline]:has([data-skill="email-scan"]:hover) & {
-      @slot;
-    }
-  }
-  [data-pipeline]:has([data-skill="email-scan"] a:focus-visible) & {
-    @slot;
-  }
-}
-
-@custom-variant skill-jd {
-  @media (hover: hover) and (pointer: fine) {
-    [data-pipeline]:has([data-skill="fetch-jd"]:hover) & {
-      @slot;
-    }
-  }
-  [data-pipeline]:has([data-skill="fetch-jd"] a:focus-visible) & {
-    @slot;
-  }
-}
-
-@custom-variant skill-score {
-  @media (hover: hover) and (pointer: fine) {
-    [data-pipeline]:has([data-skill="score-roles"]:hover) & {
-      @slot;
-    }
-  }
-  [data-pipeline]:has([data-skill="score-roles"] a:focus-visible) & {
-    @slot;
-  }
-}

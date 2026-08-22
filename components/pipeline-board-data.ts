@@ -7,10 +7,11 @@
  *
  * Every role carries a fit tier and a status so the same card set can
  * regroup under either view. A handful also carry a "before" value —
- * `arrivedOvernight`, `statusBefore`, `fitBefore` — which is what the
- * board's Last night / This morning toggle diffs against. That toggle
- * is the whole point: it's the only thing on the page that shows what
- * a scheduled run actually does, rather than describing it.
+ * `arrivedOvernight`, `statusBefore`, `fitBefore` — which the board uses
+ * to highlight what a scheduled run just changed. There's no toggle to
+ * compare states: Notion doesn't have an overnight-diff feature, so the
+ * board only ever shows one honest thing, today's state, with today's
+ * changes marked.
  *
  * Kept out of content/generated/ on purpose: that directory is synced
  * from the plugin repo on every prebuild and this data is hand-authored.
