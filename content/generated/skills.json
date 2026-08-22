@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "setup-pipeline",
+    "step": 1,
+    "say": "\"set up my job search pipeline\"",
+    "does": "Interviews you, builds your rubric, connects or creates the Notion board, schedules the runs",
+    "description": "First-run setup for the hired.run job search pipeline. Trigger when the user says \"set up my job search pipeline\", \"set up hired.run\", \"initialize the job pipeline\", \"configure my job search\", or on first install. Interviews the user to build their profile and their own scoring rubric, connects to an existing Notion board or creates a new one, and schedules the recurring scans.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/setup-pipeline/SKILL.md"
+  },
+  {
+    "slug": "email-scan",
+    "step": 2,
+    "say": "\"check my email for new roles\"",
+    "does": "Reads the inbox, creates records, applies status updates from ATS mail",
+    "description": "Scan Gmail for job alert emails and applicant tracking system status updates, then create or update records on the user's Notion board. Trigger when the user says \"check my email for new roles\", \"scan for jobs\", \"run the job scan\", or when a scheduled hired.run scan fires.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/email-scan/SKILL.md"
+  },
+  {
+    "slug": "fetch-jd",
+    "step": 3,
+    "say": "\"fetch the job descriptions\"",
+    "does": "Pulls full descriptions via public ATS APIs, browser as fallback",
+    "description": "Fetch the full job description for postings that have a URL but no description yet, and store it as a subpage on the Notion record. Trigger when the user says \"fetch the job descriptions\", \"get the JDs\", \"fill in the postings\", when scoring needs a description that is missing, or as part of a scheduled hired.run scoring run.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/fetch-jd/SKILL.md"
+  },
+  {
+    "slug": "score-roles",
+    "step": 4,
+    "say": "\"score these roles\" or \"score this: <url>\"",
+    "does": "Scores against your rubric, writes tier plus summary to Notion",
+    "description": "Score job postings against the user's own rubric and write the score and a short summary to their Notion board. Trigger when the user says \"score these roles\", \"score this job\", \"how's the fit\", \"rate this posting\", when a scheduled hired.run scoring run fires, or when new records need evaluating.",
+    "sourceUrl": "https://github.com/kaegan/hired-run/blob/main/plugins/hired/skills/score-roles/SKILL.md"
+  }
+]

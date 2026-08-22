@@ -1,0 +1,61 @@
+import type { Metadata } from "next";
+
+import { SiteFooter } from "@/components/sections/site-footer";
+
+export const metadata: Metadata = {
+  title: "Privacy",
+  description: "What this site and the hired plugin do with your data.",
+};
+
+export default function PrivacyPage() {
+  return (
+    <main className="flex-1">
+      <div className="mx-auto w-full max-w-3xl px-6 pb-16 pt-12">
+        <a
+          href="/"
+          className="font-mono text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <span className="text-primary">▸</span> hired.run
+        </a>
+        <h1 className="mt-10 text-3xl font-semibold tracking-tight">Privacy</h1>
+
+        <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted-foreground">
+          <p>
+            <strong className="text-foreground">This site</strong> collects
+            nothing beyond anonymous, cookie-less page analytics (Vercel
+            Analytics). No accounts, no forms, no tracking pixels, no
+            third-party scripts.
+          </p>
+          <p>
+            <strong className="text-foreground">The plugin</strong> runs
+            entirely inside your own Claude desktop app, using your own Notion
+            and Gmail connections. Your email, your board, and your rubric
+            never touch a server we control — there isn&apos;t one. The plugin
+            is a set of markdown instruction files; you can read every line of
+            what it does on{" "}
+            <a
+              href="https://github.com/kaegan/hired-run"
+              className="text-primary underline underline-offset-4"
+            >
+              GitHub
+            </a>
+            .
+          </p>
+          <p>
+            Gmail access is read-only by design: the plugin never sends,
+            replies, forwards, deletes, archives, or labels mail. See{" "}
+            <a
+              href="/#wont-do"
+              className="text-primary underline underline-offset-4"
+            >
+              What it won&apos;t do
+            </a>{" "}
+            for the verbatim commitments and links to the exact lines in the
+            source.
+          </p>
+        </div>
+      </div>
+      <SiteFooter />
+    </main>
+  );
+}

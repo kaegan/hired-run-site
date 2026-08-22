@@ -1,0 +1,19 @@
+{
+  "plugin": {
+    "name": "hired",
+    "version": "0.3.0",
+    "description": "Job search pipeline for Claude Cowork. Scans your inbox for roles, fetches the job description, scores each one against a rubric you write during setup, and tracks it all in Notion.",
+    "license": "MIT",
+    "homepage": "https://hired.run"
+  },
+  "marketplace": {
+    "name": "hired-run",
+    "repo": "kaegan/hired-run",
+    "repoUrl": "https://github.com/kaegan/hired-run"
+  },
+  "install": [
+    "/plugin marketplace add kaegan/hired-run",
+    "/plugin install hired@hired-run"
+  ],
+  "syncedAt": "2026-08-22T04:41:40.135Z"
+}
