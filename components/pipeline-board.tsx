@@ -18,8 +18,6 @@ const FIT_VARIANT: Record<FitTier, BadgeVariant> = {
   unscored: "dashed",
 };
 
-const FIT_ORDER: FitTier[] = ["high", "medium", "low", "unscored"];
-
 const STATUS_LABEL: Record<RoleStatus, string> = {
   "next-up": "Next Up",
   tailoring: "Tailoring",
@@ -52,53 +50,36 @@ const VISIBLE_CAP = 4;
 /**
  * Every column groups its roles into two buckets:
  *  - static:      unaffected by the run
- *  - highlighted: arrived overnight, or scored/advanced into this column
- *                 for the first time — the run's actual output.
+ *  - highlighted: arrived overnight, advanced a status, or got scored for
+ *                 the first time — the run's actual output.
  * There is no "before" bucket. The board shows one state, today's, with
  * what changed marked — see the file-level comment in
  * pipeline-board-data.ts for why.
+ *
+ * The board groups by Status only. An earlier version also offered a Fit
+ * Score view behind a tab; it hid the more informative grouping behind a
+ * click most readers never made. Fit still rides along on every card.
  */
 type ColumnGroups = {
   static: BoardRole[];
   highlighted: BoardRole[];
 };
 
-function partitionByFit(tier: FitTier): ColumnGroups {
-  return {
-    static: ROLES.filter(
-      (r) => !r.arrivedOvernight && r.fitBefore === undefined && r.fit === tier
-    ),
-    highlighted: ROLES.filter(
-      (r) =>
-        r.fit === tier &&
-        (r.arrivedOvernight || (r.fitBefore !== undefined && r.fitBefore !== tier))
-    ),
-  };
-}
+const touchedByRun = (r: BoardRole) =>
+  Boolean(r.arrivedOvernight || r.statusBefore !== undefined || r.fitBefore !== undefined);
 
 function partitionByStatus(status: RoleStatus): ColumnGroups {
+  const inColumn = ROLES.filter((r) => r.status === status);
   return {
-    static: ROLES.filter(
-      (r) =>
-        !r.arrivedOvernight && r.statusBefore === undefined && r.status === status
-    ),
-    highlighted: ROLES.filter(
-      (r) =>
-        r.status === status &&
-        (r.arrivedOvernight ||
-          (r.statusBefore !== undefined && r.statusBefore !== status))
-    ),
+    static: inColumn.filter((r) => !touchedByRun(r)),
+    highlighted: inColumn.filter(touchedByRun),
   };
 }
 
-function deltaLabelFor(role: BoardRole, dimension: "fit" | "status") {
+function deltaLabelFor(role: BoardRole) {
   if (role.arrivedOvernight) return "new";
-  if (dimension === "fit" && role.fitBefore !== undefined) {
-    return `scored ${FIT_LABEL[role.fit]}`;
-  }
-  if (dimension === "status" && role.statusBefore !== undefined) {
-    return `→ ${STATUS_LABEL[role.status]}`;
-  }
+  if (role.statusBefore !== undefined) return `→ ${STATUS_LABEL[role.status]}`;
+  if (role.fitBefore !== undefined) return `scored ${FIT_LABEL[role.fit]}`;
   return "changed";
 }
 
@@ -181,12 +162,10 @@ function BoardColumn({
   label,
   variant,
   groups,
-  dimension,
 }: {
   label: string;
   variant: BadgeVariant;
   groups: ColumnGroups;
-  dimension: "fit" | "status";
 }) {
   const { static: staticRoles, highlighted } = groups;
   const hasChanges = highlighted.length > 0;
@@ -216,7 +195,7 @@ function BoardColumn({
             key={role.id}
             role={role}
             highlighted
-            deltaLabel={deltaLabelFor(role, dimension)}
+            deltaLabel={deltaLabelFor(role)}
           />
         ))}
         {visibleStatic.map((role) => (
@@ -230,7 +209,7 @@ function BoardColumn({
 
 export function PipelineBoard() {
   return (
-    <figure data-pipeline>
+    <figure>
       <div className="overflow-hidden rounded-lg border border-border bg-card transition-colors motion-reduce:transition-none has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border px-4 py-2">
           <span className="font-mono text-xs text-muted-foreground">
@@ -245,40 +224,9 @@ export function PipelineBoard() {
         </div>
 
         <div className="flex items-center justify-between border-b border-border px-4">
-          <fieldset className="flex gap-4">
-            <legend className="sr-only">Group roles by</legend>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                name="board-view"
-                id="board-view-fit"
-                data-board-view="fit"
-                defaultChecked
-                className="peer/fit sr-only"
-              />
-              <label
-                htmlFor="board-view-fit"
-                className="-mb-px cursor-pointer border-b-2 border-transparent py-2.5 font-mono text-xs text-muted-foreground transition-colors motion-reduce:transition-none peer-checked/fit:border-primary peer-checked/fit:text-foreground peer-focus-visible/fit:ring-2 peer-focus-visible/fit:ring-ring"
-              >
-                Fit Score
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                name="board-view"
-                id="board-view-status"
-                data-board-view="status"
-                className="peer/status sr-only"
-              />
-              <label
-                htmlFor="board-view-status"
-                className="-mb-px cursor-pointer border-b-2 border-transparent py-2.5 font-mono text-xs text-muted-foreground transition-colors motion-reduce:transition-none peer-checked/status:border-primary peer-checked/status:text-foreground peer-focus-visible/status:ring-2 peer-focus-visible/status:ring-ring"
-              >
-                Status
-              </label>
-            </div>
-          </fieldset>
+          <span className="py-2.5 font-mono text-xs text-muted-foreground">
+            Status
+          </span>
           <span className="hidden font-mono text-micro text-muted-foreground sm:inline">
             06:00 scheduled run
           </span>
@@ -292,35 +240,19 @@ export function PipelineBoard() {
             aria-label="Job pipeline board, scrollable"
             className="overflow-x-auto overscroll-x-contain focus-visible:outline-none [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin]"
           >
-            <div className="flex w-max gap-3 p-3 board-status:hidden">
-              {FIT_ORDER.map((fit) => (
-                <BoardColumn
-                  key={fit}
-                  label={FIT_LABEL[fit]}
-                  variant={FIT_VARIANT[fit]}
-                  groups={partitionByFit(fit)}
-                  dimension="fit"
-                />
-              ))}
-            </div>
-            <div className="hidden w-max gap-3 p-3 board-status:flex">
+            <div className="flex w-max gap-3 p-3">
               {STATUS_ORDER.map((status) => (
                 <BoardColumn
                   key={status}
                   label={STATUS_LABEL[status]}
                   variant={STATUS_VARIANT[status]}
                   groups={partitionByStatus(status)}
-                  dimension="status"
                 />
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      <figcaption className="mt-3 font-mono text-micro text-muted-foreground">
-        Illustration — real companies, invented roles.
-      </figcaption>
     </figure>
   );
 }

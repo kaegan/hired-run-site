@@ -180,9 +180,6 @@ export function SlackUpdate() {
         </div>
       </div>
 
-      <figcaption className="mt-3 font-mono text-micro text-muted-foreground">
-        Illustration — the same three deltas the run reported.
-      </figcaption>
     </figure>
   );
 }

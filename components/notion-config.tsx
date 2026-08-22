@@ -170,9 +170,6 @@ export function NotionConfig() {
         </div>
       </div>
 
-      <figcaption className="mt-3 font-mono text-micro text-muted-foreground">
-        Illustration — invented person, invented rubric.
-      </figcaption>
     </figure>
   );
 }

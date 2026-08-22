@@ -63,7 +63,7 @@ type BlockProps = {
 
 function Block({ step, when, title, body, footer, children, stacked }: BlockProps) {
   const text = (
-    <div className={stacked ? "max-w-[62ch]" : "lg:sticky lg:top-12 lg:self-start"}>
+    <div className={stacked ? "max-w-[62ch]" : "lg:self-start"}>
       <p className="font-mono text-micro text-muted-foreground/50">{step}</p>
       <p className="mt-1.5 font-mono text-xs font-semibold text-primary">
         {when}
