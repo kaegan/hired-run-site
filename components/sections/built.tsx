@@ -46,21 +46,21 @@ export function Built() {
         rubric, the board, and the inbox are all yours.
       </p>
 
-      <dl className="mt-10 space-y-8">
+      <ol className="mt-10 space-y-8">
         {DECISIONS.map((d, i) => (
-          <div key={d.title} className="flex gap-4">
+          <li key={d.title} className="flex gap-4">
             <span className="mt-0.5 font-mono text-xs text-primary">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>
-              <dt className="text-sm font-semibold">{d.title}</dt>
-              <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              <h3 className="text-sm font-semibold">{d.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                 {d.body}
-              </dd>
+              </p>
             </div>
-          </div>
+          </li>
         ))}
-      </dl>
+      </ol>
 
       <a
         href={meta.marketplace.repoUrl}
