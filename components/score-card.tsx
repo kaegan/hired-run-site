@@ -81,10 +81,6 @@ function PageIcon() {
 export function ScoreCard() {
   return (
     <figure className="w-full">
-      <figcaption className="mb-2 font-mono text-micro uppercase tracking-[0.1em] text-muted-foreground">
-        What lands on your board
-      </figcaption>
-
       <div className="overflow-hidden rounded-lg border border-border bg-card">
         <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-2 sm:px-5">
           <span className="truncate font-mono text-micro text-muted-foreground">
@@ -142,10 +138,6 @@ export function ScoreCard() {
           <span>score-roles</span>
         </div>
       </div>
-
-      <p className="mt-2.5 text-meta leading-relaxed text-muted-foreground">
-        You didn&apos;t write this page — you wrote the rubric it argues from.
-      </p>
     </figure>
   );
 }

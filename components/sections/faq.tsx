@@ -41,7 +41,7 @@ export function Faq() {
     <section id="faq" className="mx-auto w-full max-w-6xl px-6 py-20">
       <Eyebrow>Questions</Eyebrow>
       <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-        Reasonable questions
+        So how does it work?
       </h2>
 
       <dl className="mt-8 grid gap-x-12 sm:grid-cols-2">

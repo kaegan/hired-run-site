@@ -1,5 +1,4 @@
 import skills from "@/content/generated/skills.json";
-import { Eyebrow } from "@/components/eyebrow";
 import { NotionConfig } from "@/components/notion-config";
 import { ClaudeRun } from "@/components/claude-run";
 import { SlackUpdate } from "@/components/slack-update";
@@ -126,18 +125,6 @@ function Block({
 export function HowItWorks() {
   return (
     <section id="how-it-works">
-      <div className="mx-auto w-full max-w-6xl px-6 py-20">
-        <Eyebrow>How it works</Eyebrow>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-          One morning with hired
-        </h2>
-        <p className="mt-3 max-w-[62ch] text-base leading-relaxed text-muted-foreground">
-          Setup interviews you once, and reads your resume if you have one
-          handy. After that, a scheduled run does the reading and scoring —
-          you mostly just wake up to a board that moved.
-        </p>
-      </div>
-
       <div className="border-t border-border">
         <Block
           step="01"
@@ -146,15 +133,15 @@ export function HowItWorks() {
           body={
             <>
               <p>
-                Setup is a conversation, not a form. What comes out of it is
-                an ordinary Notion page you can read and edit — your profile,
-                your rubric, your hard filters. There is no settings
-                screen, because this is the settings screen.
+                Setup is a simple conversation. Teach Hired what you&apos;re
+                looking for by answering some questions, providing a resume,
+                and showing it some postings of the type of job you&apos;re
+                looking for.
               </p>
               <p className="mt-3">
-                Hand it your resume and it reads that too, so a score can cite
-                the job you actually did instead of guessing. Optional, and it
-                only ever reads: the rubric still decides what counts.
+                What comes out of it is an ordinary Notion page that you can
+                read and edit. As Hired pulls jobs for it, you or it can hone
+                in the rubric more to your taste.
               </p>
             </>
           }
@@ -171,9 +158,7 @@ export function HowItWorks() {
           body={
             <p>
               A scheduled run opens your inbox, pulls the full posting for
-              anything new, and scores it against the rubric you wrote —
-              citing the dimensions by name, so you can argue with it. Forty
-              seconds, and nobody applied to anything.
+              anything new, and scores it against the rubric you wrote.
             </p>
           }
           footer={
@@ -186,14 +171,12 @@ export function HowItWorks() {
         <Block
           step="03"
           when="06:04"
-          title="You wake up to a board that moved"
+          title="You wake up to new job opportunities"
           body={
             <p>
-              Two roles that weren&apos;t there last night, one scored for
-              the first time, one that advanced because a recruiter
-              replied — each one marked right on the board you already
-              use. Nothing to compare against; the run already did that
-              part.
+              Your board automatically updates multiple times through the
+              day, adding new opportunities, and moving existing ones
+              through the board as updates come in from recruiters.
             </p>
           }
           footer={<BlockFooter label="the result" />}
@@ -206,14 +189,12 @@ export function HowItWorks() {
           step="04"
           tint
           when="06:04"
-          title="And a message where you already are"
+          title="Get updates on high fit new roles right away"
           body={
             <p>
-              Every run posts what changed to the Slack channel you picked
-              during setup — what&apos;s worth a look, what needs a reply
-              from you, and what it handled without bothering you. Most
-              mornings you read three lines on your phone and never open
-              the board.
+              Every run posts what happened to a Slack channel you picked
+              during setup. Most mornings you can read what happened from
+              your phone without having to even open the board.
             </p>
           }
           footer={<BlockFooter slugs={["notify-slack"]} />}

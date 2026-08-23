@@ -71,7 +71,7 @@ export function Hero() {
               <span className="font-mono text-foreground">hired</span> reads
               your inbox, scores each role against a rubric{" "}
               <em className="not-italic text-foreground">you</em> write, and
-              keeps a Notion board current. It never applies to anything.
+              keeps a Notion board current with all of your opportunities.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -94,7 +94,7 @@ export function Hero() {
 
             <p className="mt-5 text-meta leading-relaxed text-muted-foreground">
               Free and {meta.plugin.license}-licensed. Runs on your own Claude,
-              Notion and Gmail — there is no server of ours in the middle.
+              Notion and Gmail.
             </p>
           </div>
 
