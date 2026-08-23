@@ -2,6 +2,9 @@ import {
   RUBRIC,
   PERSONA,
   HARD_FILTERS,
+  HARD_FILTER_RULE,
+  STANDOUT,
+  TIERS,
   EXPERIENCE,
   RUN_TIME,
 } from "@/components/how-it-works-data";
@@ -112,42 +115,50 @@ export function NotionConfig() {
 
               <SectionHeading>My rubric</SectionHeading>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Six criteria, weights summing to 100. These are the only
-                things scoring is allowed to reward.
+                Six dimensions, and what pushes a role up or down each one.
+                These are the only things scoring is allowed to reward.
               </p>
               <div className="mt-3 overflow-hidden rounded-md border border-border">
-                <div className="flex items-center gap-3 border-b border-border bg-card-inset px-3 py-2">
-                  <span className="flex-1 font-mono text-micro text-muted-foreground">
-                    Criterion
-                  </span>
-                  <span className="w-12 shrink-0 text-right font-mono text-micro text-muted-foreground">
-                    Weight
-                  </span>
-                </div>
                 {RUBRIC.map((c) => (
                   <div
                     key={c.label}
-                    className="flex items-baseline gap-3 border-b border-border px-3 py-2.5 last:border-b-0"
+                    className="border-b border-border px-3 py-2.5 last:border-b-0"
                   >
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground">
-                        {c.label}
-                      </p>
-                      <p className="mt-0.5 text-meta leading-relaxed text-muted-foreground">
-                        {c.note}
-                      </p>
-                    </div>
-                    <span className="w-12 shrink-0 text-right font-mono text-sm text-foreground">
-                      {c.weight}
-                    </span>
+                    <p className="text-sm font-medium text-foreground">
+                      {c.label}
+                    </p>
+                    <p className="mt-1 flex gap-2 text-meta leading-relaxed text-foreground">
+                      <span aria-hidden className="text-muted-foreground/60">
+                        ↑
+                      </span>
+                      {c.up}
+                    </p>
+                    <p className="mt-0.5 flex gap-2 text-meta leading-relaxed text-muted-foreground">
+                      <span aria-hidden className="text-muted-foreground/60">
+                        ↓
+                      </span>
+                      {c.down}
+                    </p>
                   </div>
                 ))}
               </div>
 
+              <SectionHeading>Standout</SectionHeading>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                What makes me unusual rather than merely qualified.
+              </p>
+              <div className="mt-3 rounded-md border border-border px-3 py-2.5">
+                <p className="text-sm font-medium text-foreground">
+                  {STANDOUT.label}
+                </p>
+                <p className="mt-0.5 text-meta leading-relaxed text-muted-foreground">
+                  {STANDOUT.effect}
+                </p>
+              </div>
+
               <SectionHeading>Hard filters</SectionHeading>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Anything matching these is scored Low and never surfaced,
-                regardless of the rubric.
+                {HARD_FILTER_RULE}
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {HARD_FILTERS.map((f) => (
@@ -157,6 +168,30 @@ export function NotionConfig() {
                   >
                     {f}
                   </span>
+                ))}
+              </div>
+
+              <SectionHeading>What each tier means</SectionHeading>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                In my words, with roughly how many roles I expect in each. If
+                everything lands High, the score is useless.
+              </p>
+              <div className="mt-3 overflow-hidden rounded-md border border-border">
+                {TIERS.map((t) => (
+                  <div
+                    key={t.name}
+                    className="flex items-baseline gap-3 border-b border-border px-3 py-2 last:border-b-0"
+                  >
+                    <span className="w-20 shrink-0 text-sm font-medium text-foreground">
+                      {t.name}
+                    </span>
+                    <span className="w-10 shrink-0 font-mono text-micro text-muted-foreground">
+                      {t.share}
+                    </span>
+                    <span className="flex-1 text-meta leading-relaxed text-muted-foreground">
+                      {t.action}
+                    </span>
+                  </div>
                 ))}
               </div>
 
@@ -181,7 +216,7 @@ export function NotionConfig() {
                   💡
                 </span>
                 <p className="text-meta leading-relaxed text-primary-surface-foreground">
-                  Change a weight and the next scoring run re-reads this page.
+                  Change a line here and the next scoring run re-reads this page.
                   Nothing is compiled, cached, or stored anywhere else.
                 </p>
               </div>
