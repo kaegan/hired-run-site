@@ -1,101 +1,162 @@
+import meta from "@/content/generated/meta.json";
+import { CopyButton } from "@/components/copy-button";
+import { Eyebrow } from "@/components/eyebrow";
+
 /**
- * What setup actually does, step by step. The earlier version listed the
- * prerequisites and left the interview itself as one vague sentence —
- * the part people most want to know before running a plugin against
- * their inbox and their board.
+ * The commands, what you need, and what the interview actually covers.
+ *
+ * Two columns: the commands and the connector list hold a left rail, the
+ * interview runs down the right as cards. The steps were a plain ordered
+ * list under a narrow column before, which buried the one step that
+ * matters most — setup ends by scoring two roles you already have an
+ * opinion about, and lets you fix the rubric when it gets them wrong.
+ * That step is the last card and the only highlighted one.
+ *
+ * Step wording follows plugins/hired/skills/setup-pipeline/SKILL.md.
  */
 
 const STEPS = [
   {
-    title: "It asks about you",
-    body: "Where you'll work and whether location is a hard filter, the titles you're going after, years and scope, deal breakers, and your comp floor.",
+    title: "About you",
+    body: "Where you'll work and whether that's a hard filter, the titles you're going after, the scope you've carried, deal breakers, and your comp floor.",
   },
   {
-    title: "You paste real postings",
-    body: "3–5 you'd actually apply to, plus 1–2 you passed on. It reads them, pulls out the dimensions that vary, and asks about the ones you didn't mention.",
+    title: "Real postings",
+    body: "3–5 you'd actually apply to, plus 1–2 you passed on. It reads them, pulls out the dimensions that vary, and asks about the ones you never mentioned.",
   },
   {
-    title: "It writes your rubric",
-    body: "Dimensions, hard filters, company signals, and what High or Low mean in your words. It reads the draft back before saving anything.",
+    title: "Your rubric, read back",
+    body: "Dimensions and what pushes a role up or down each one, hard filters, standout logic, and what every tier means in your words. Nothing saves until you've heard it.",
   },
   {
-    title: "It maps your Notion board",
+    title: "Your board",
     body: "Paste your existing database and it reads your property names and types, then maps to them — adding only what's missing, and only if you say yes. No board yet? It builds one.",
   },
   {
-    title: "You set the inbox scope",
-    body: "You name which job-alert senders are allowed to create records. Status mail is scanned more widely, because it can only ever update a role already on your board.",
-  },
-  {
-    title: "It schedules the runs",
-    body: "A scan and a scoring pass, at a frequency you choose — every couple of hours if you're searching hard, daily if you're watching.",
+    title: "Inbox scope & schedule",
+    body: "You name which job-alert senders may create records, and how often the runs fire. Status mail is scanned more widely, because it can only ever update a role already on your board.",
   },
   {
     title: "Then it proves it",
-    body: "Setup doesn't end on a promise. It runs the scan live, scores what it found in front of you, and asks whether the scores match your gut. If they don't, you fix the rubric right there.",
+    body: "Setup doesn't end on a promise. You name two roles you already have an opinion about — one you'd apply to, one you'd skip — and it scores both in front of you. If the scores don't match your gut, you fix the rubric, not the scores.",
+    highlight: true,
   },
 ];
 
 const PREREQS = [
-  "The Claude desktop app — plugins do not run on web or mobile",
-  "Notion connector — bring your own tracking board, or let setup build one",
-  "Gmail connector — read-only, see the section below",
-  "Chrome browser tools are optional; most descriptions come from public ATS APIs",
-  "Slack connector — optional, outbound only, posts run results to a channel you pick",
+  {
+    name: "Claude desktop",
+    note: "Required — plugins don't run on web or mobile",
+  },
+  { name: "Notion", note: "Your board, or setup builds one" },
+  { name: "Gmail", note: "Read-only, senders you name" },
+  { name: "Slack", note: "Optional, outbound only" },
+  {
+    name: "Chrome browser tools",
+    note: "Optional — most descriptions come from public ATS APIs",
+    wide: true,
+  },
 ];
 
 export function Install() {
+  const installBlock = meta.install.join("\n");
+
   return (
-    <section id="install" className="mx-auto w-full max-w-6xl px-6 py-20">
-      <div className="grid gap-x-8 gap-y-3 lg:grid-cols-[3rem_1fr]">
-        <span
-          aria-hidden
-          className="hidden font-mono text-micro text-muted-foreground/50 lg:block"
-        >
-          02
-        </span>
+    <section id="install" className="border-b border-border">
+      <div className="mx-auto grid w-full max-w-6xl gap-x-12 gap-y-12 px-6 py-20 lg:grid-cols-2 lg:items-start">
         <div>
-          <h2 className="text-3xl font-semibold tracking-tight">
+          <Eyebrow>Setup</Eyebrow>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight">
             Two commands, one interview
           </h2>
-          <p className="mt-3 max-w-[62ch] text-base leading-relaxed text-muted-foreground">
-            Run the two commands above, then say{" "}
+          <p className="mt-3 max-w-[46ch] text-base leading-relaxed text-muted-foreground">
+            Paste these into Claude desktop, then say{" "}
             <span className="font-mono text-foreground">
               &quot;set up my job search pipeline&quot;
             </span>
-            . That starts one conversation, run once. Here is every part
-            of it, in order.
+            . That starts one conversation, run once — and it ends by proving
+            itself on real postings.
           </p>
 
-          <ol className="mt-8 max-w-[70ch] divide-y divide-border border-t border-border">
+          <div className="mt-6 overflow-hidden rounded-lg border border-border bg-card">
+            <div className="flex items-center justify-between border-b border-border px-3 py-1.5">
+              <span className="font-mono text-micro text-muted-foreground">
+                Claude desktop · any session
+              </span>
+              <CopyButton text={installBlock} />
+            </div>
+            <pre className="overflow-x-auto px-3 py-3 font-mono text-xs leading-6 sm:text-sm">
+              {meta.install.map((cmd) => (
+                <div key={cmd}>
+                  <span className="select-none text-primary">&gt; </span>
+                  {cmd}
+                </div>
+              ))}
+            </pre>
+          </div>
+
+          <p className="mt-8 font-mono text-micro uppercase tracking-[0.1em] text-muted-foreground">
+            What you need first
+          </p>
+          <ul className="mt-3 grid gap-2.5 sm:grid-cols-2">
+            {PREREQS.map((p) => (
+              <li
+                key={p.name}
+                className={`rounded-lg border border-border bg-card px-4 py-3 ${
+                  p.wide ? "sm:col-span-2" : ""
+                }`}
+              >
+                <p className="text-sm font-semibold">{p.name}</p>
+                <p className="mt-1 text-meta leading-relaxed text-muted-foreground">
+                  {p.note}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="font-mono text-micro uppercase tracking-[0.1em] text-muted-foreground">
+            What the interview covers
+          </p>
+          <ol className="mt-3 space-y-2.5">
             {STEPS.map((s, i) => (
-              <li key={s.title} className="flex gap-4 py-5">
-                <span className="mt-0.5 font-mono text-micro text-muted-foreground">
+              <li
+                key={s.title}
+                className={`flex gap-4 rounded-lg border px-4 py-3.5 ${
+                  s.highlight
+                    ? "border-primary-line bg-primary-surface"
+                    : "border-border bg-card"
+                }`}
+              >
+                <span
+                  className={`mt-0.5 shrink-0 font-mono text-micro ${
+                    s.highlight
+                      ? "text-primary-surface-foreground"
+                      : "text-muted-foreground"
+                  }`}
+                >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <h3 className="text-sm font-semibold">{s.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  <h3
+                    className={`text-sm font-semibold ${
+                      s.highlight ? "text-primary-surface-foreground" : ""
+                    }`}
+                  >
+                    {s.title}
+                  </h3>
+                  <p
+                    className={`mt-1 text-meta leading-relaxed ${
+                      s.highlight ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
                     {s.body}
                   </p>
                 </div>
               </li>
             ))}
           </ol>
-
-          <p className="mt-10 font-mono text-micro uppercase tracking-[0.1em] text-muted-foreground">
-            What you need first
-          </p>
-          <ul className="mt-3 max-w-[70ch] divide-y divide-border border-t border-border">
-            {PREREQS.map((p) => (
-              <li
-                key={p}
-                className="py-3 text-sm leading-relaxed text-muted-foreground"
-              >
-                {p}
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>

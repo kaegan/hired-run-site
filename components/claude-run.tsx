@@ -1,11 +1,11 @@
 import { Badge } from "@/components/ui/badge";
-import { RUN_TIME } from "@/components/how-it-works-data";
+import { RUN_TIME, SPOTLIGHT } from "@/components/how-it-works-data";
 
 /**
  * "How it works" block 2 — what a scheduled run looks like in Claude.
  *
  * Not a live terminal and not a typing loop: a static transcript in the
- * same card language as the hero's install block. The tool lines are
+ * same card language as every other illustration. The tool lines are
  * set dressing; the summary row at the bottom is the payload, and it
  * has to match the board's delta and the Slack message exactly.
  */
@@ -34,10 +34,10 @@ const LINES: Line[] = [
   { kind: "tool", text: "greenhouse.io/robinhood/jobs/6204417", meta: "3.3k" },
   { kind: "tool", text: "greenhouse.io/figma/jobs/4930221", meta: "5.2k" },
   { kind: "blank" },
-  { kind: "skill", text: "score-roles", meta: "6 criteria · your resume" },
+  { kind: "skill", text: "score-roles", meta: "6 dimensions · your resume" },
   { kind: "score", text: "Spotify — Senior PM, Personalization", tier: "High" },
-  { kind: "reason", text: "0→1 ownership — Loop, 0→400k MAU · remote-first" },
-  { kind: "reason", text: "gap: no audio or licensing background" },
+  { kind: "reason", text: SPOTLIGHT.shortSignal },
+  { kind: "reason", text: SPOTLIGHT.shortGap },
   { kind: "score", text: "Figma — Group PM, Collaboration", tier: "Medium" },
   { kind: "reason", text: "big PM org, design-led · three days in office" },
   { kind: "score", text: "Robinhood — PM, Growth", tier: "Low" },

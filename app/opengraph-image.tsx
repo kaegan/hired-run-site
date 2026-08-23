@@ -16,8 +16,8 @@ export default function OgImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0a0a0a",
-          color: "#ededed",
+          background: "#0c0b0a",
+          color: "#eeece7",
           padding: 72,
           fontFamily: "monospace",
         }}
@@ -37,8 +37,8 @@ export default function OgImage() {
             style={{
               marginLeft: "auto",
               fontSize: 24,
-              color: "#a1a1a1",
-              border: "1px solid #242424",
+              color: "#a39f98",
+              border: "1px solid #272421",
               borderRadius: 8,
               padding: "6px 16px",
             }}
@@ -57,15 +57,15 @@ export default function OgImage() {
           }}
         >
           <div>An analyst for your job search.</div>
-          <div style={{ color: "#a1a1a1" }}>Not an apply-bot.</div>
+          <div style={{ color: "#a39f98" }}>Not an apply-bot.</div>
         </div>
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             gap: 10,
-            background: "#111111",
-            border: "1px solid #242424",
+            background: "#131211",
+            border: "1px solid #272421",
             borderRadius: 12,
             padding: "28px 32px",
             fontSize: 28,

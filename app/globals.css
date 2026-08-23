@@ -4,17 +4,23 @@
 /* Both themes follow the system preference — no toggle. Green is not
  * decoration: it marks what the pipeline decided or changed. Every green
  * value below is a named token, never a bare opacity modifier on
- * --primary, so the signal holds its weight in both light and dark. */
+ * --primary, so the signal holds its weight in both light and dark.
+ *
+ * The neutral ramp is warm on purpose — paper in light, a warm near-black
+ * in dark. A cool grey ramp made the page read like a dashboard; the
+ * product is a page of reading and a board you already own. The greens
+ * are untouched by that warmth, which is what keeps them legible as
+ * signal rather than as part of the surface. */
 :root {
   color-scheme: light dark;
 
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card: #111111;
-  --card-foreground: #ededed;
-  --card-inset: #0d0d0d;
-  --popover: #111111;
-  --popover-foreground: #ededed;
+  --background: #0c0b0a;
+  --foreground: #eeece7;
+  --card: #131211;
+  --card-foreground: #eeece7;
+  --card-inset: #0f0e0d;
+  --popover: #131211;
+  --popover-foreground: #eeece7;
 
   --primary: #4ade80;
   --primary-foreground: #052e16;
@@ -25,14 +31,14 @@
   --primary-line: #2f6b45;
   --primary-line-strong: #4ade80;
 
-  --secondary: #1a1a1a;
-  --secondary-foreground: #ededed;
-  --muted: #171717;
-  --muted-foreground: #a1a1a1;
+  --secondary: #1c1a18;
+  --secondary-foreground: #eeece7;
+  --muted: #191716;
+  --muted-foreground: #a39f98;
   --accent: #14231a;
   --accent-foreground: #4ade80;
-  --border: #242424;
-  --input: #242424;
+  --border: #272421;
+  --input: #272421;
   --ring: #4ade80;
   --radius: 0.5rem;
 }
@@ -41,14 +47,16 @@
   :root {
     /* Background/card/muted/secondary are spaced further apart than a
      * default neutral scale — at 2% steps the board surface, card
-     * insets, and neutral chips were indistinguishable. */
-    --background: #f4f4f5;
-    --foreground: #171717;
-    --card: #ffffff;
-    --card-foreground: #171717;
-    --card-inset: #f8f8f9;
-    --popover: #ffffff;
-    --popover-foreground: #171717;
+     * insets, and neutral chips were indistinguishable. Card is off-white
+     * rather than #fff so it sits on the paper ground instead of
+     * punching a hole in it. */
+    --background: #f2f0ea;
+    --foreground: #191817;
+    --card: #fbfaf7;
+    --card-foreground: #191817;
+    --card-inset: #f6f4ef;
+    --popover: #fbfaf7;
+    --popover-foreground: #191817;
 
     --primary: #15803d;
     --primary-foreground: #ffffff;
@@ -59,14 +67,14 @@
     --primary-line: #86efac;
     --primary-line-strong: #15803d;
 
-    --secondary: #e6e6e7;
-    --secondary-foreground: #171717;
-    --muted: #ececed;
-    --muted-foreground: #6b6b6b;
+    --secondary: #e7e3da;
+    --secondary-foreground: #191817;
+    --muted: #edeae2;
+    --muted-foreground: #6b6862;
     --accent: #ecfdf5;
     --accent-foreground: #166534;
-    --border: #dcdcdd;
-    --input: #dcdcdd;
+    --border: #dcd8ce;
+    --input: #dcd8ce;
     --ring: #15803d;
   }
 }
