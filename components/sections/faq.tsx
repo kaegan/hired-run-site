@@ -1,10 +1,14 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Eyebrow } from "@/components/eyebrow";
 
+/**
+ * Answers open, in two columns.
+ *
+ * These were behind an accordion, which is the wrong control for six
+ * questions whose answers are the reassurance the page exists to give.
+ * Collapsed, every one reads as something being kept back — and the two
+ * about the resume are exactly the ones a reader wants answered without
+ * having to ask for them.
+ */
 const FAQS = [
   {
     q: "Why the desktop app only?",
@@ -20,7 +24,7 @@ const FAQS = [
   },
   {
     q: "Can I change the rubric later?",
-    a: "Yes — the rubric is a plain-language Notion page. Edit it whenever a score annoys you; the next run scores by the new rule.",
+    a: "Yes — the rubric is a plain-language Notion page. Edit it whenever a score annoys you; the next run scores by the new rule. If a score is wrong because a fact about you is wrong, that's the Experience page instead, and the difference matters: editing the rubric around a stale fact leaves a rule that misfires on every future role.",
   },
   {
     q: "Do I have to give it my resume?",
@@ -34,31 +38,22 @@ const FAQS = [
 
 export function Faq() {
   return (
-    <section id="faq" className="mx-auto w-full max-w-6xl px-6 py-14">
-      <div className="grid gap-x-8 gap-y-3 lg:grid-cols-[3rem_1fr]">
-        <span
-          aria-hidden
-          className="hidden font-mono text-micro text-muted-foreground/50 lg:block"
-        >
-          04
-        </span>
-        <div>
-          <h2 className="text-3xl font-semibold tracking-tight">
-            Reasonable questions
-          </h2>
+    <section id="faq" className="mx-auto w-full max-w-6xl px-6 py-20">
+      <Eyebrow>Questions</Eyebrow>
+      <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+        Reasonable questions
+      </h2>
 
-          <Accordion type="single" collapsible className="mt-6 max-w-[62ch]">
-            {FAQS.map((f) => (
-              <AccordionItem key={f.q} value={f.q}>
-                <AccordionTrigger>{f.q}</AccordionTrigger>
-                <AccordionContent className="leading-relaxed">
-                  {f.a}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </div>
+      <dl className="mt-8 grid gap-x-12 sm:grid-cols-2">
+        {FAQS.map((f) => (
+          <div key={f.q} className="border-t border-border py-5">
+            <dt className="text-sm font-semibold">{f.q}</dt>
+            <dd className="mt-2 max-w-[56ch] text-sm leading-relaxed text-muted-foreground">
+              {f.a}
+            </dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

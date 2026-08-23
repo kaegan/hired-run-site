@@ -1,4 +1,5 @@
 import skills from "@/content/generated/skills.json";
+import { Eyebrow } from "@/components/eyebrow";
 import { NotionConfig } from "@/components/notion-config";
 import { ClaudeRun } from "@/components/claude-run";
 import { SlackUpdate } from "@/components/slack-update";
@@ -13,6 +14,11 @@ import { PipelineBoard } from "@/components/pipeline-board";
  * cites each skill from the synced plugin content instead of listing
  * them separately, and shows the board as chapter three of the story
  * rather than as a standalone hero visualization.
+ *
+ * The four blocks are full-bleed bands separated by hairlines and
+ * alternating surfaces, not a `space-y` stack. Four long blocks divided
+ * only by whitespace read as four unrelated pages; ruled off, they read
+ * as one night, in order.
  */
 
 const SKILLS_BY_SLUG = Object.fromEntries(
@@ -59,9 +65,23 @@ type BlockProps = {
    * width — in a side column it shows two and a half columns and stops
    * reading as a board at all. */
   stacked?: boolean;
+  /** Every other band sits on --card-inset, so the sequence has a beat.
+   * Not --card: the illustrations are themselves --card, and a card on a
+   * card-coloured band survives only as a border. Page → inset → card is
+   * a three-step ladder that holds in both themes. */
+  tint?: boolean;
 };
 
-function Block({ step, when, title, body, footer, children, stacked }: BlockProps) {
+function Block({
+  step,
+  when,
+  title,
+  body,
+  footer,
+  children,
+  stacked,
+  tint,
+}: BlockProps) {
   const text = (
     <div className={stacked ? "max-w-[62ch]" : "lg:self-start"}>
       <p className="font-mono text-micro text-muted-foreground/50">{step}</p>
@@ -78,38 +98,47 @@ function Block({ step, when, title, body, footer, children, stacked }: BlockProp
     </div>
   );
 
-  if (stacked) {
-    return (
-      <div>
-        {text}
-        <div className="mt-8 overflow-hidden">{children}</div>
-      </div>
-    );
-  }
-
-  return (
+  const inner = stacked ? (
+    <div>
+      {text}
+      <div className="mt-8 overflow-hidden">{children}</div>
+    </div>
+  ) : (
     <div className="grid gap-x-12 gap-y-8 lg:grid-cols-[minmax(16rem,21rem)_minmax(0,1fr)] lg:items-start">
       {text}
       <div className="min-w-0">{children}</div>
+    </div>
+  );
+
+  return (
+    <div
+      className={
+        tint
+          ? "border-b border-border bg-card-inset"
+          : "border-b border-border"
+      }
+    >
+      <div className="mx-auto w-full max-w-6xl px-6 py-16 sm:py-20">{inner}</div>
     </div>
   );
 }
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="mx-auto w-full max-w-6xl px-6 py-20">
-      <div className="max-w-[62ch]">
-        <h2 className="text-3xl font-semibold tracking-tight">
+    <section id="how-it-works">
+      <div className="mx-auto w-full max-w-6xl px-6 py-20">
+        <Eyebrow>How it works</Eyebrow>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight">
           One morning with hired
         </h2>
-        <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+        <p className="mt-3 max-w-[62ch] text-base leading-relaxed text-muted-foreground">
           Setup interviews you once, and reads your resume if you have one
           handy. After that, a scheduled run does the reading and scoring —
           you mostly just wake up to a board that moved.
         </p>
       </div>
 
-      <div className="mt-16 space-y-24">
+      <div className="border-t border-border">
         <Block
           step="01"
           when="You, once"
@@ -119,7 +148,7 @@ export function HowItWorks() {
               <p>
                 Setup is a conversation, not a form. What comes out of it is
                 an ordinary Notion page you can read and edit — your profile,
-                your weighted rubric, your hard filters. There is no settings
+                your rubric, your hard filters. There is no settings
                 screen, because this is the settings screen.
               </p>
               <p className="mt-3">
@@ -136,13 +165,14 @@ export function HowItWorks() {
 
         <Block
           step="02"
+          tint
           when="06:00, daily"
           title="Then it runs without you"
           body={
             <p>
               A scheduled run opens your inbox, pulls the full posting for
               anything new, and scores it against the rubric you wrote —
-              citing the criteria by name, so you can argue with it. Forty
+              citing the dimensions by name, so you can argue with it. Forty
               seconds, and nobody applied to anything.
             </p>
           }
@@ -174,6 +204,7 @@ export function HowItWorks() {
 
         <Block
           step="04"
+          tint
           when="06:04"
           title="And a message where you already are"
           body={
