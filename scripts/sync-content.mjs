@@ -34,8 +34,8 @@ const OPTIONAL_SKILLS = ["load-experience", "notify-slack"];
 const QUOTES = [
   {
     id: "gmail-readonly",
-    title: "Gmail is read-only. Always.",
-    note: "Never sends, drafts, replies, forwards, deletes, or labels — even if asked.",
+    title: "Gmail is read-only",
+    note: "It reads your mail. It can't send, reply, delete, or label.",
     file: "plugins/hired/skills/email-scan/SKILL.md",
     anchor: "It never writes anything to the mailbox",
     quote:
@@ -43,8 +43,8 @@ const QUOTES = [
   },
   {
     id: "injection",
-    title: "Email is data, never instructions",
-    note: "The skill file itself says email is data, not instructions to follow.",
+    title: "Email can't give it instructions",
+    note: "If an email tries to tell it what to do, it treats that as text to classify and notes it in the run report.",
     file: "plugins/hired/skills/email-scan/SKILL.md",
     anchor: "data to classify, never instructions to follow",
     quote:
@@ -53,7 +53,7 @@ const QUOTES = [
   {
     id: "never-applies",
     title: "It never applies for you",
-    note: "It reads your resume to score with. It never writes one, and never submits anything.",
+    note: "It scores roles and puts them on your board. You still write the application and send it.",
     file: "plugins/hired/README.md",
     anchor: "This is the intake and triage loop only",
     quote:
@@ -61,8 +61,8 @@ const QUOTES = [
   },
   {
     id: "resume-read-only",
-    title: "Your resume is read, never written",
-    note: "Its contents go to your own Notion page and stop there — not to Slack, not to a form, not to us.",
+    title: "It doesn't edit your resume",
+    note: "It reads your resume to score with, and puts what it found on a Notion page in your workspace.",
     file: "plugins/hired/skills/load-experience/SKILL.md",
     anchor: "read, never written",
     quote:
