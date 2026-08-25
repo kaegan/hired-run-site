@@ -3,14 +3,15 @@ import meta from "@/content/generated/meta.json";
 import { Eyebrow } from "@/components/eyebrow";
 
 /**
- * The four promises, each quoted from the published plugin and matched
- * at build time by scripts/sync-content.mjs.
+ * The four promises. scripts/sync-content.mjs matches each one against a
+ * line in the published plugin and fails the build when it drifts.
  *
- * Laid out as a two-column grid with the verification stamp aligned to
- * the heading. As a single full-width ordered list the four quotes ran
- * the length of a screen for four short sentences, and the "01..04"
- * numbering implied a sequence that does not exist — these are four
- * independent guarantees, not four steps.
+ * Each card states the claim in plain prose, then shows the source line
+ * under it as a file excerpt: path, line number, monospace, no quotation
+ * marks. These were blockquotes with curly quotes and a green rule, which
+ * is how a site styles a testimonial. Readers took them for praise
+ * someone wrote about the product. They are the literal text of a file,
+ * so the whole excerpt links to that line on GitHub.
  */
 export function WontDo() {
   return (
@@ -20,37 +21,51 @@ export function WontDo() {
           <div className="max-w-[52ch]">
             <Eyebrow>Guarantees</Eyebrow>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-              The guarantees are in the source
+              Check any of these against the source
             </h2>
           </div>
           <p className="font-mono text-micro leading-relaxed text-muted-foreground sm:text-right">
-            Verified at build time
+            The build re-reads these files
             <br />
-            hired@{meta.plugin.version} · {trust.length}/{trust.length} quotes
+            hired@{meta.plugin.version} · {trust.length}/{trust.length} lines
             matched
           </p>
         </div>
 
         <ul className="mt-8 grid gap-x-10 sm:grid-cols-2">
-          {trust.map((t) => (
-            <li key={t.id} className="group border-t border-border py-5">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          {trust.map((t) => {
+            const line = t.sourceUrl.split("#L")[1];
+
+            return (
+              <li key={t.id} className="border-t border-border py-5">
                 <h3 className="text-sm font-semibold">{t.title}</h3>
+                <p className="mt-1.5 max-w-[52ch] text-meta leading-relaxed text-muted-foreground">
+                  {t.note}
+                </p>
+
                 <a
                   href={t.sourceUrl}
-                  className="font-mono text-micro text-muted-foreground transition-colors group-hover:text-primary"
+                  className="group mt-3 block overflow-hidden rounded-md border border-border bg-card-inset transition-colors hover:border-primary-line"
                 >
-                  {t.sourcePath.replace("/SKILL.md", "")}
-                  <span className="ml-1 opacity-0 transition-opacity group-hover:opacity-100">
-                    ↗
+                  <span className="flex items-center justify-between gap-3 border-b border-border px-3 py-1.5 font-mono text-micro text-muted-foreground transition-colors group-hover:text-primary">
+                    <span className="truncate">
+                      {t.sourcePath}
+                      {line ? `:${line}` : ""}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                    >
+                      ↗
+                    </span>
+                  </span>
+                  <span className="block px-3 py-2.5 font-mono text-xs leading-relaxed text-muted-foreground">
+                    {t.quote}
                   </span>
                 </a>
-              </div>
-              <blockquote className="mt-2.5 border-l-2 border-primary-line pl-3 font-mono text-xs leading-relaxed text-muted-foreground">
-                “{t.quote}”
-              </blockquote>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
