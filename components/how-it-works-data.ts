@@ -147,46 +147,17 @@ export const EXPERIENCE = {
 };
 
 /**
- * One scored record, as it sits on the board after a run — the hero
- * illustration.
+ * The record the illustrations spotlight — the rest of it (properties,
+ * summary, the time it was written) lives on the role itself in
+ * pipeline-board-data.ts, so the hero card and the same card opened from
+ * the board are the same record rather than two copies of one.
  *
- * Property names and types are the canonical field map from
- * setup-pipeline/SKILL.md, not invented board columns. `fit_score` is a
- * Select and `status` is a Status, which is why those two render as
- * chips and the rest render as plain values: that is how Notion draws
- * them, and getting it wrong is the tell that a mockup was never a
- * screenshot.
- *
- * The summary is one paragraph because that is what score-roles writes —
- * "two to four sentences on the Notion page body, under a `## Score
- * Summary` heading". It still has to hit the four beats the skill
- * requires, in its order: the strongest fit signal with the evidence
- * named, the context worth knowing at a glance, the real gaps, and the
- * action the tier implies in the user's own vocabulary. Rendering those
- * as four labelled blocks made the card look like a form the pipeline
- * fills in. It writes prose.
- *
- * The `short*` lines are the same claims condensed for the run
+ * The `short*` lines are the summary's claims condensed for the run
  * transcript, kept here rather than in ClaudeRun so the two can't come
  * to disagree.
  */
-export type PropertyType = "relation" | "select" | "status" | "text" | "url";
-
 export const SPOTLIGHT = {
   roleId: "spotify-personalization-pm",
-  tier: "High" as const,
-  writtenAt: "06:02",
-  properties: [
-    { label: "Company", type: "relation" as PropertyType, value: "Spotify" },
-    { label: "Fit score", type: "select" as PropertyType, value: "High", chip: "fit" as const },
-    { label: "Status", type: "status" as PropertyType, value: "Next Up", chip: "status" as const },
-    { label: "Location", type: "text" as PropertyType, value: "Remote — US" },
-    { label: "Salary range", type: "text" as PropertyType, value: "$215–260k" },
-    { label: "Source", type: "select" as PropertyType, value: "LinkedIn alert", chip: "neutral" as const },
-    { label: "Posting URL", type: "url" as PropertyType, value: "lifeatspotify.com/jobs/6142098" },
-  ],
-  summary:
-    "Closest thing on the board to the Loop work — nothing to 400k monthly actives is the build-from-zero scope this posting describes for the personalization surface, and the ranking rollout answers the AI dimension. Remote-first, Senior scope, and $215–260k clears your floor. Nothing in your background covers audio or music licensing, and the posting asks for it twice. Tailor a full application this week.",
   shortSignal: "0→1 ownership — Loop, 0→400k MAU · remote-first",
   shortGap: "gap: no audio or licensing background",
 };

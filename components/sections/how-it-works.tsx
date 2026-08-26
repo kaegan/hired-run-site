@@ -122,7 +122,7 @@ function Block({
   );
 }
 
-export function HowItWorks() {
+export function HowItWorks({ now }: { now: number }) {
   return (
     <section id="how-it-works">
       <div className="border-t border-border">
@@ -182,7 +182,7 @@ export function HowItWorks() {
           footer={<BlockFooter label="the result" />}
           stacked
         >
-          <PipelineBoard />
+          <PipelineBoard now={now} />
         </Block>
 
         <Block

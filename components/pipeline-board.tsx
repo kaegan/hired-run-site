@@ -1,40 +1,25 @@
+"use client";
+
+import * as React from "react";
+import { X } from "lucide-react";
+
 import { Badge, type badgeVariants } from "@/components/ui/badge";
-import { ROLES, type BoardRole, type FitTier, type RoleStatus } from "@/components/pipeline-board-data";
+import {
+  FIT_LABEL,
+  ROLES,
+  STATUS_LABEL,
+  type BoardRole,
+  type RoleStatus,
+} from "@/components/pipeline-board-data";
+import {
+  FIT_VARIANT,
+  RecordPage,
+  STATUS_VARIANT,
+} from "@/components/record-page";
+import { relativeAge } from "@/lib/board-dates";
 import type { VariantProps } from "class-variance-authority";
 
 type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;
-
-const FIT_LABEL: Record<FitTier, string> = {
-  high: "High",
-  medium: "Medium",
-  low: "Low",
-  unscored: "Unscored",
-};
-
-const FIT_VARIANT: Record<FitTier, BadgeVariant> = {
-  high: "solid",
-  medium: "surface",
-  low: "outline",
-  unscored: "dashed",
-};
-
-const STATUS_LABEL: Record<RoleStatus, string> = {
-  "next-up": "Next Up",
-  tailoring: "Tailoring",
-  submitted: "Submitted",
-  interviewing: "Interviewing",
-  offer: "Offer",
-  "no-response": "No Response",
-};
-
-const STATUS_VARIANT: Record<RoleStatus, BadgeVariant> = {
-  "next-up": "outline",
-  tailoring: "outline",
-  submitted: "surface",
-  interviewing: "line",
-  offer: "solid",
-  "no-response": "dashed",
-};
 
 const STATUS_ORDER: RoleStatus[] = [
   "next-up",
@@ -59,6 +44,21 @@ const VISIBLE_CAP = 4;
  * The board groups by Status only. An earlier version also offered a Fit
  * Score view behind a tab; it hid the more informative grouping behind a
  * click most readers never made. Fit still rides along on every card.
+ *
+ * Green on this board belongs to the chips — the fit tier, and the late
+ * stages of the status ladder. Cards the run touched used to be filled
+ * green as well, which left one colour standing for "the pipeline rates
+ * this highly" and "this moved last night" in the same glance. They're
+ * marked with a neutral rail and the delta label they already carried
+ * instead, so a green card now means a good role rather than a new one.
+ *
+ * Every card opens its record, the same way a card on a real Notion board
+ * does — the board is a view of a database, and a view whose rows go
+ * nowhere is the one thing a screenshot of Notion never is. The record it
+ * opens is the hero card, rendered from the same role (see RecordPage).
+ * That is also what makes the board worth its full-width band: a reader
+ * can check any claim the page makes about scoring against the record
+ * behind whichever card they doubt.
  */
 type ColumnGroups = {
   static: BoardRole[];
@@ -85,26 +85,37 @@ function deltaLabelFor(role: BoardRole) {
 
 function RoleCard({
   role,
+  onOpen,
   highlighted = false,
   deltaLabel,
 }: {
   role: BoardRole;
+  onOpen: (role: BoardRole) => void;
   highlighted?: boolean;
   deltaLabel?: string;
 }) {
   return (
     <li>
-      <div
-        className={`relative flex flex-col gap-2 rounded-md border p-3 transition-colors motion-reduce:transition-none ${
-          highlighted
-            ? "border-primary-line-strong bg-primary-surface"
-            : "border-border bg-card-inset"
-        }`}
+      <button
+        type="button"
+        onClick={() => onOpen(role)}
+        // The label replaces the card's own text for a screen reader, so it
+        // carries what the card shows — not just where the click goes.
+        aria-label={`Open the record for ${role.title} at ${role.company} — ${
+          FIT_LABEL[role.fit]
+        } fit, ${STATUS_LABEL[role.status]}`}
+        className="group relative flex w-full cursor-pointer flex-col gap-2 rounded-md border border-border bg-card-inset p-3 text-left transition-colors motion-reduce:transition-none hover:border-primary-line focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
+        {highlighted && (
+          <span
+            aria-hidden
+            className="absolute inset-y-0 left-0 w-[3px] rounded-l-md bg-foreground/60"
+          />
+        )}
         {highlighted && deltaLabel && (
           <span
             aria-hidden
-            className="absolute right-2 top-2 font-mono text-micro font-semibold text-primary-surface-foreground"
+            className="absolute right-2 top-2 font-mono text-micro font-semibold text-foreground"
           >
             {deltaLabel}
           </span>
@@ -121,7 +132,7 @@ function RoleCard({
           </span>
         </div>
 
-        <p className="text-sm font-medium leading-snug text-foreground">
+        <p className="text-sm font-medium leading-snug text-foreground underline-offset-2 group-hover:underline">
           {role.title}
         </p>
 
@@ -138,11 +149,104 @@ function RoleCard({
             {FIT_LABEL[role.fit]}
           </Badge>
           <span className="font-mono text-micro text-muted-foreground">
-            {role.age}
+            {relativeAge(role.addedDaysAgo)}
           </span>
         </div>
-      </div>
+      </button>
     </li>
+  );
+}
+
+/**
+ * A native <dialog>, opened with showModal(): Esc, the focus trap and the
+ * backdrop come from the platform rather than from a dependency this page
+ * doesn't otherwise need. The top layer is also what lets the record
+ * escape the board's horizontal scroller.
+ *
+ * The one thing the platform doesn't give us is a scroll lock — a modal
+ * dialog makes the page inert but a wheel over it still scrolls the page
+ * underneath, which reads as the record sliding around. The effect below
+ * freezes the document while a record is open, and `overscroll-contain`
+ * on the record itself stops a long summary from handing its last scroll
+ * back to the page.
+ */
+function RecordDialog({
+  role,
+  now,
+  onClose,
+}: {
+  role: BoardRole | null;
+  now: number;
+  onClose: () => void;
+}) {
+  const ref = React.useRef<HTMLDialogElement>(null);
+  const invoker = React.useRef<HTMLElement | null>(null);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (role) {
+      if (!el.open) {
+        invoker.current = document.activeElement as HTMLElement | null;
+        el.showModal();
+      }
+      return;
+    }
+    if (el.open) el.close();
+    // Chrome restores focus to the invoker on Esc but not on every path
+    // out; putting it back by hand means closing always lands the reader
+    // on the card they opened, wherever the board is scrolled to.
+    invoker.current?.focus();
+    invoker.current = null;
+  }, [role]);
+
+  React.useEffect(() => {
+    if (!role) return;
+    const root = document.documentElement;
+    const { overflow, paddingRight } = root.style;
+    // Hiding the scrollbar reclaims its width, so the page shifts unless
+    // that width is padded back. Zero on overlay-scrollbar platforms.
+    const gutter = window.innerWidth - root.clientWidth;
+    root.style.overflow = "hidden";
+    if (gutter > 0) root.style.paddingRight = `${gutter}px`;
+    return () => {
+      root.style.overflow = overflow;
+      root.style.paddingRight = paddingRight;
+    };
+  }, [role]);
+
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      // The dialog element itself is the backdrop's click target: anything
+      // inside the record stops at the wrapper below.
+      onClick={(e) => {
+        if (e.target === ref.current) onClose();
+      }}
+      aria-label={role ? `${role.title} at ${role.company}` : undefined}
+      className="m-auto w-[min(34rem,calc(100vw-1.5rem))] bg-transparent p-0 text-foreground backdrop:bg-black/60"
+    >
+      {role && (
+        // Only the record scrolls; the close control stays put, or a long
+        // summary on a short window scrolls the way out of reach.
+        <div className="flex max-h-[85dvh] flex-col gap-2">
+          <div className="flex shrink-0 justify-end">
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-border bg-card px-2.5 font-mono text-micro text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <X className="size-3.5" />
+              Close
+            </button>
+          </div>
+          <div className="min-h-0 overflow-y-auto overscroll-contain">
+            <RecordPage role={role} now={now} />
+          </div>
+        </div>
+      )}
+    </dialog>
   );
 }
 
@@ -162,10 +266,12 @@ function BoardColumn({
   label,
   variant,
   groups,
+  onOpen,
 }: {
   label: string;
   variant: BadgeVariant;
   groups: ColumnGroups;
+  onOpen: (role: BoardRole) => void;
 }) {
   const { static: staticRoles, highlighted } = groups;
   const hasChanges = highlighted.length > 0;
@@ -194,12 +300,13 @@ function BoardColumn({
           <RoleCard
             key={role.id}
             role={role}
+            onOpen={onOpen}
             highlighted
             deltaLabel={deltaLabelFor(role)}
           />
         ))}
         {visibleStatic.map((role) => (
-          <RoleCard key={role.id} role={role} />
+          <RoleCard key={role.id} role={role} onOpen={onOpen} />
         ))}
         <OverflowRow count={overflow} />
       </ul>
@@ -207,7 +314,9 @@ function BoardColumn({
   );
 }
 
-export function PipelineBoard() {
+export function PipelineBoard({ now }: { now: number }) {
+  const [openRole, setOpenRole] = React.useState<BoardRole | null>(null);
+
   return (
     <figure>
       <div className="overflow-hidden rounded-lg border border-border bg-card transition-colors motion-reduce:transition-none has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
@@ -247,12 +356,23 @@ export function PipelineBoard() {
                   label={STATUS_LABEL[status]}
                   variant={STATUS_VARIANT[status]}
                   groups={partitionByStatus(status)}
+                  onOpen={setOpenRole}
                 />
               ))}
             </div>
           </div>
         </div>
       </div>
+
+      <figcaption className="mt-3 font-mono text-micro text-muted-foreground">
+        Open any card to read the record hired wrote for it.
+      </figcaption>
+
+      <RecordDialog
+        role={openRole}
+        now={now}
+        onClose={() => setOpenRole(null)}
+      />
     </figure>
   );
 }
