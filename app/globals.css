@@ -2,7 +2,9 @@
 @import "tw-animate-css";
 
 /* Both themes follow the system preference — no toggle. Green is not
- * decoration: it marks what the pipeline decided or changed. Every green
+ * decoration: it marks what the pipeline decided — the fit tier it wrote,
+ * the stage a role reached. What a run *changed* is marked by a neutral
+ * rail on the card, so one colour isn't carrying two meanings. Every green
  * value below is a named token, never a bare opacity modifier on
  * --primary, so the signal holds its weight in both light and dark.
  *

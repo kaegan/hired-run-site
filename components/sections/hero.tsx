@@ -18,7 +18,7 @@ const NAV = [
  * now sit in Setup and in the closing band; the hero shows the one thing
  * the pipeline actually produces — a scored record on your board.
  */
-export function Hero() {
+export function Hero({ now }: { now: number }) {
   return (
     <header className="border-b border-border">
       <div className="mx-auto w-full max-w-6xl px-6 pt-8">
@@ -99,7 +99,7 @@ export function Hero() {
           </div>
 
           <div className="w-full min-w-0 max-w-[30rem] lg:ml-auto">
-            <ScoreCard />
+            <ScoreCard now={now} />
           </div>
         </div>
       </div>
