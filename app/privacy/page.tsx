@@ -21,10 +21,16 @@ export default function PrivacyPage() {
 
         <div className="mt-6 max-w-[62ch] space-y-4 text-base leading-relaxed text-muted-foreground">
           <p>
-            <strong className="text-foreground">This site</strong> collects
-            nothing beyond anonymous, cookie-less page analytics (Vercel
-            Analytics). No accounts, no forms, no tracking pixels, no
-            third-party scripts.
+            <strong className="text-foreground">This site</strong> measures
+            two things: anonymous, cookie-less page counts (Vercel Analytics),
+            and how the page actually gets read (PostHog), which records
+            pageviews, clicks, and scrolling as a replayable session. No
+            accounts, no ads, no data sold or shared. PostHog stores an
+            identifier in your browser so a second visit isn&apos;t counted as
+            a stranger, and its requests are proxied through hired.run rather
+            than sent to a third-party domain. Sessions are anonymous — no
+            name, no email, and the text of any input is masked before it
+            leaves your browser — and they are deleted after 30 days.
           </p>
           <p>
             <strong className="text-foreground">The plugin</strong> runs
