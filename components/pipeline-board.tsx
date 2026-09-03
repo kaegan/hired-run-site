@@ -141,7 +141,7 @@ function RoleCard({
           className="truncate font-mono text-micro text-muted-foreground"
         >
           {role.host}
-          <span className="text-muted-foreground/60">{role.path}</span>
+          <span className="text-muted-foreground-dim">{role.path}</span>
         </p>
 
         <div className="flex items-center justify-between gap-2 pt-0.5">
@@ -255,7 +255,7 @@ function OverflowRow({ count }: { count: number }) {
   return (
     <li
       aria-hidden
-      className="px-1 py-1 font-mono text-micro text-muted-foreground/70"
+      className="px-1 py-1 font-mono text-micro text-muted-foreground-dim"
     >
       +{count} more
     </li>
@@ -319,7 +319,7 @@ export function PipelineBoard({ now }: { now: number }) {
 
   return (
     <figure>
-      <div className="overflow-hidden rounded-lg border border-border bg-card transition-colors motion-reduce:transition-none has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
+      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-card transition-colors motion-reduce:transition-none has-[[data-scroller]:focus-visible]:ring-2 has-[[data-scroller]:focus-visible]:ring-ring">
         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border px-4 py-2">
           <span className="font-mono text-xs text-muted-foreground">
             <span className="text-primary" aria-hidden>

@@ -90,13 +90,13 @@ function TranscriptLine({ line }: { line: Line }) {
     return (
       <div className="flex items-baseline justify-between gap-4 text-muted-foreground">
         <span className="truncate">
-          <span aria-hidden className="text-muted-foreground/50">
+          <span aria-hidden className="text-muted-foreground-dim">
             ⎿{" "}
           </span>
           {line.text}
         </span>
         {line.meta && (
-          <span className="shrink-0 text-micro text-muted-foreground/60">
+          <span className="shrink-0 text-micro text-muted-foreground-dim">
             {line.meta}
           </span>
         )}
@@ -119,7 +119,7 @@ function TranscriptLine({ line }: { line: Line }) {
     return (
       <div className="flex items-baseline justify-between gap-4">
         <span className="truncate text-foreground">
-          <span aria-hidden className="text-muted-foreground/50">
+          <span aria-hidden className="text-muted-foreground-dim">
             ⎿{" "}
           </span>
           {line.text}
@@ -135,13 +135,13 @@ function TranscriptLine({ line }: { line: Line }) {
     );
   }
 
-  return <div className="pl-4 text-muted-foreground/70">{line.text}</div>;
+  return <div className="pl-4 text-muted-foreground-dim">{line.text}</div>;
 }
 
 export function ClaudeRun() {
   return (
     <figure className="w-full">
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
         <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-2">
           <span className="font-mono text-micro text-muted-foreground">
             <span aria-hidden className="text-primary">
@@ -166,7 +166,7 @@ export function ClaudeRun() {
           <span className="font-mono text-xs font-semibold text-primary-surface-foreground">
             2 new · 1 scored · 1 status change
           </span>
-          <span className="font-mono text-micro text-primary-surface-foreground/70">
+          <span className="font-mono text-micro text-primary-surface-foreground">
             board updated
           </span>
         </div>

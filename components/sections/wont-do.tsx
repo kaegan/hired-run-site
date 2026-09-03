@@ -20,7 +20,7 @@ export function WontDo() {
         <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
           <div className="max-w-[52ch]">
             <Eyebrow>Guarantees</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight">
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight">
               Check any of these against the source
             </h2>
           </div>
@@ -38,8 +38,8 @@ export function WontDo() {
 
             return (
               <li key={t.id} className="border-t border-border py-5">
-                <h3 className="text-sm font-semibold">{t.title}</h3>
-                <p className="mt-1.5 max-w-[52ch] text-meta leading-relaxed text-muted-foreground">
+                <h3 className="text-base font-semibold">{t.title}</h3>
+                <p className="mt-1.5 max-w-[52ch] text-base leading-relaxed text-muted-foreground">
                   {t.note}
                 </p>
 

@@ -46,7 +46,7 @@ function Item({
 }) {
   return (
     <div className="flex items-baseline gap-2">
-      <span aria-hidden className="mt-[2px] shrink-0 text-muted-foreground/50">
+      <span aria-hidden className="mt-[2px] shrink-0 text-muted-foreground-dim">
         •
       </span>
       <div className="min-w-0 flex-1">
@@ -87,10 +87,10 @@ function Item({
 export function SlackUpdate() {
   return (
     <figure className="w-full max-w-[36rem]">
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
         <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-2">
           <span className="font-mono text-micro text-muted-foreground">
-            <span aria-hidden className="text-muted-foreground/60">
+            <span aria-hidden className="text-muted-foreground-dim">
               #
             </span>{" "}
             <span className="text-foreground">job-search</span>

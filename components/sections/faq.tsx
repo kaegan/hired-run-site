@@ -40,15 +40,15 @@ export function Faq() {
   return (
     <section id="faq" className="mx-auto w-full max-w-6xl px-6 py-20">
       <Eyebrow>Questions</Eyebrow>
-      <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-        So how does it work?
+      <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight">
+        Before you install
       </h2>
 
       <dl className="mt-8 grid gap-x-12 sm:grid-cols-2">
         {FAQS.map((f) => (
           <div key={f.q} className="border-t border-border py-5">
-            <dt className="text-sm font-semibold">{f.q}</dt>
-            <dd className="mt-2 max-w-[56ch] text-sm leading-relaxed text-muted-foreground">
+            <dt className="text-base font-semibold">{f.q}</dt>
+            <dd className="mt-2 max-w-[56ch] text-base leading-relaxed text-muted-foreground">
               {f.a}
             </dd>
           </div>

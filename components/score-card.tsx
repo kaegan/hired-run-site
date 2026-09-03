@@ -8,14 +8,15 @@ import { RecordPage } from "@/components/record-page";
  * Everything about how a record page draws lives in RecordPage, which
  * the board also opens on click. This picks the role and nothing else,
  * so the hero shows exactly what a reader gets when they click that same
- * card three sections down.
+ * card three sections down — minus the rows a stranger has no use for yet
+ * (see RecordPage's `compact`).
  */
 const ROLE = ROLES.find((r) => r.id === SPOTLIGHT.roleId)!;
 
 export function ScoreCard({ now }: { now: number }) {
   return (
     <figure className="w-full">
-      <RecordPage role={ROLE} now={now} />
+      <RecordPage role={ROLE} now={now} compact />
     </figure>
   );
 }
