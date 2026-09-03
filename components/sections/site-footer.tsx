@@ -25,7 +25,7 @@ export function SiteFooter() {
           </div>
 
           <div className="w-full max-w-[46ch] lg:shrink-0">
-            <div className="overflow-hidden rounded-lg border border-border bg-background">
+            <div className="overflow-hidden rounded-lg border border-border bg-background shadow-card">
               <div className="flex items-center justify-between border-b border-border px-3 py-1.5">
                 <span className="font-mono text-micro text-muted-foreground">
                   Claude desktop · any session
@@ -65,7 +65,7 @@ export function SiteFooter() {
           >
             Privacy
           </a>
-          <span className="font-mono text-micro text-muted-foreground/70">
+          <span className="font-mono text-micro text-muted-foreground-dim">
             v{meta.plugin.version} · {meta.plugin.license} · runs in the
             Claude desktop app
           </span>

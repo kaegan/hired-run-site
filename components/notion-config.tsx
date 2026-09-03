@@ -41,12 +41,12 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 export function NotionConfig() {
   return (
     <figure className="w-full">
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <div className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
         {/* Notion chrome */}
         <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-2">
           <span className="truncate font-mono text-micro text-muted-foreground">
-            Private <span className="text-muted-foreground/50">/</span> Job
-            Search <span className="text-muted-foreground/50">/</span>{" "}
+            Private <span className="text-muted-foreground-dim">/</span> Job
+            Search <span className="text-muted-foreground-dim">/</span>{" "}
             <span className="text-foreground">Config</span>
           </span>
           <span className="hidden shrink-0 font-mono text-micro text-muted-foreground sm:inline">
@@ -100,7 +100,7 @@ export function NotionConfig() {
               <ul className="mt-3 space-y-1.5 text-sm text-foreground">
                 {EXPERIENCE.proofPoints.map((point) => (
                   <li key={point} className="flex gap-2">
-                    <span aria-hidden className="text-muted-foreground/50">
+                    <span aria-hidden className="text-muted-foreground-dim">
                       •
                     </span>
                     {point}
@@ -128,13 +128,13 @@ export function NotionConfig() {
                       {c.label}
                     </p>
                     <p className="mt-1 flex gap-2 text-meta leading-relaxed text-foreground">
-                      <span aria-hidden className="text-muted-foreground/60">
+                      <span aria-hidden className="text-muted-foreground-dim">
                         ↑
                       </span>
                       {c.up}
                     </p>
                     <p className="mt-0.5 flex gap-2 text-meta leading-relaxed text-muted-foreground">
-                      <span aria-hidden className="text-muted-foreground/60">
+                      <span aria-hidden className="text-muted-foreground-dim">
                         ↓
                       </span>
                       {c.down}
@@ -203,7 +203,7 @@ export function NotionConfig() {
                   "12 saved companies (see Companies DB)",
                 ].map((line) => (
                   <li key={line} className="flex gap-2">
-                    <span aria-hidden className="text-muted-foreground/50">
+                    <span aria-hidden className="text-muted-foreground-dim">
                       •
                     </span>
                     {line}

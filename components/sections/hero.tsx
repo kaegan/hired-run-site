@@ -3,7 +3,9 @@ import { GithubIcon } from "@/components/github-icon";
 import { ScoreCard } from "@/components/score-card";
 
 /** In-page nav. The page is long and every section below is a real
- * destination — without these the only way down is the scroll bar. */
+ * destination — without these the only way down is the scroll bar.
+ * Below md the header keeps only GitHub: Changelog is the least useful
+ * link to a first-time visitor, and it is repeated in the footer. */
 const NAV = [
   { href: "#how-it-works", label: "How it works" },
   { href: "#install", label: "Setup" },
@@ -27,7 +29,7 @@ export function Hero({ now }: { now: number }) {
             <span className="text-primary">▸</span> hired.run
           </span>
           <div className="flex items-center gap-5 text-sm text-muted-foreground">
-            <div className="hidden items-center gap-5 lg:flex">
+            <div className="hidden items-center gap-5 md:flex">
               {NAV.map((item) => (
                 <a
                   key={item.href}
@@ -40,13 +42,13 @@ export function Hero({ now }: { now: number }) {
               <span aria-hidden className="text-border">
                 ·
               </span>
+              <a
+                href="/changelog"
+                className="transition-colors hover:text-foreground"
+              >
+                Changelog
+              </a>
             </div>
-            <a
-              href="/changelog"
-              className="transition-colors hover:text-foreground"
-            >
-              Changelog
-            </a>
             <a
               href={meta.marketplace.repoUrl}
               className="inline-flex items-center gap-1.5 transition-colors hover:text-foreground"
@@ -61,13 +63,13 @@ export function Hero({ now }: { now: number }) {
           {/* min-w-0: the record card holds an unbreakable posting URL, and a
             * grid track sizes to min-content without it. */}
           <div className="min-w-0">
-            <h1 className="max-w-[16ch] text-4xl font-semibold tracking-tight sm:text-5xl lg:text-display">
+            <h1 className="max-w-[14ch] text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-display">
               An analyst for your job search.
               <br />
               <span className="text-muted-foreground">Not an apply-bot.</span>
             </h1>
 
-            <p className="mt-5 max-w-[52ch] text-lead leading-relaxed text-muted-foreground">
+            <p className="mt-5 max-w-[52ch] text-lg leading-relaxed text-muted-foreground">
               <span className="font-mono text-foreground">hired</span> reads
               your inbox, scores each role against a rubric{" "}
               <em className="not-italic text-foreground">you</em> write, and

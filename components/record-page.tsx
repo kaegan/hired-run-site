@@ -95,8 +95,8 @@ const TYPE_ICON: Record<PropertyType, React.ComponentType<{ className?: string }
  * that is how Notion draws them, and getting it wrong is the tell that a
  * mockup was never a screenshot.
  */
-function properties(role: BoardRole, now: number) {
-  return [
+function properties(role: BoardRole, now: number, compact = false) {
+  const all = [
     { label: "Company", type: "relation" as const, value: role.company },
     {
       label: "Fit score",
@@ -117,18 +117,22 @@ function properties(role: BoardRole, now: number) {
       type: "select" as const,
       value: role.source,
       variant: "outline" as const,
+      texture: true,
     },
     {
       label: "Date added",
       type: "date" as const,
       value: dateAdded(role.addedDaysAgo, now, role.writtenAt),
+      texture: true,
     },
     {
       label: "Posting URL",
       type: "url" as const,
       value: `${role.host}${role.path}`,
+      texture: true,
     },
   ];
+  return compact ? all.filter((p) => !p.texture) : all;
 }
 
 /** Notion page icons carry the tier — green for High, plain otherwise. */
@@ -136,7 +140,7 @@ const ICON_STYLE: Record<FitTier, string> = {
   high: "border-primary-line bg-primary-surface text-primary-surface-foreground",
   medium: "border-border bg-secondary text-muted-foreground",
   low: "border-border bg-card-inset text-muted-foreground",
-  unscored: "border-dashed border-border text-muted-foreground/60",
+  unscored: "border-dashed border-border text-muted-foreground-dim",
 };
 
 function PageIcon({ fit }: { fit: FitTier }) {
@@ -161,12 +165,27 @@ function PageIcon({ fit }: { fit: FitTier }) {
   );
 }
 
-export function RecordPage({ role, now }: { role: BoardRole; now: number }) {
+/**
+ * `compact` is the hero rendering. It drops the three rows that are
+ * texture rather than verdict — source, date added, posting URL — and
+ * the mono footer, so a stranger's first read lands on the tier chip and
+ * the summary instead of on a property table. The board's dialog shows
+ * the full record.
+ */
+export function RecordPage({
+  role,
+  now,
+  compact = false,
+}: {
+  role: BoardRole;
+  now: number;
+  compact?: boolean;
+}) {
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-card">
       <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-2 sm:px-5">
         <span className="truncate font-mono text-micro text-muted-foreground">
-          Job Search <span className="text-muted-foreground/50">/</span> Job
+          Job Search <span className="text-muted-foreground-dim">/</span> Job
           Pipeline
         </span>
         <span className="shrink-0 font-mono text-micro text-muted-foreground">
@@ -181,12 +200,12 @@ export function RecordPage({ role, now }: { role: BoardRole; now: number }) {
         </h2>
 
         <dl className="mt-4 border-y border-border py-1.5">
-          {properties(role, now).map((p) => {
+          {properties(role, now, compact).map((p) => {
             const Icon = TYPE_ICON[p.type];
             return (
               <div key={p.label} className="flex items-center gap-3 py-1">
                 <dt className="flex w-28 shrink-0 items-center gap-1.5 text-meta text-muted-foreground sm:w-[8.5rem]">
-                  <Icon className="size-3.5 shrink-0 text-muted-foreground/60" />
+                  <Icon className="size-3.5 shrink-0 text-muted-foreground-dim" />
                   {p.label}
                 </dt>
                 {/* Values wrap rather than truncate: a location clipped to
@@ -219,10 +238,12 @@ export function RecordPage({ role, now }: { role: BoardRole; now: number }) {
         </p>
       </div>
 
-      <div className="flex items-center justify-between gap-4 border-t border-border px-4 py-2 font-mono text-micro text-muted-foreground sm:px-5">
-        <span>fit_score → {FIT_LABEL[role.fit]}</span>
-        <span>{role.summary ? "score-roles" : "fetch-jd"}</span>
-      </div>
+      {!compact && (
+        <div className="flex items-center justify-between gap-4 border-t border-border px-4 py-2 font-mono text-micro text-muted-foreground sm:px-5">
+          <span>fit_score → {FIT_LABEL[role.fit]}</span>
+          <span>{role.summary ? "score-roles" : "fetch-jd"}</span>
+        </div>
+      )}
     </div>
   );
 }
